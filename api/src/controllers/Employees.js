@@ -1,6 +1,5 @@
 const { Employees } = require("../db");
 const { Op } = require("sequelize");
-const axios = require('axios');
 
 const ejecutarBaseDatos = async () => {
   const obtenerInformacion = await Employees.findAll();
@@ -58,7 +57,7 @@ const registrarEmpleado = async (req, res, next) => {
     const { primerNombre, segundoNombre, primerApellido, segundoApellido, edad, foto, curriculumVitae, puesto } = req.body;
 
     const fechaIngreso = new Date().toISOString().slice(0, 10);
-
+    // Falta agregar foto y currículum vitae
     const crearEmpleado = await Employees.create({
       primerNombre,
       segundoNombre,

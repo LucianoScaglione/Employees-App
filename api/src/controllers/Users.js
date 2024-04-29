@@ -17,7 +17,7 @@ const registrarUsuario = async (req, res, next) => {
     const { nombreUsuario, contraseña, correo } = req.body;
     const buscarUsuario = await Users.findOne({ where: { nombreUsuario } });
     const buscarUsuarioCorreo = await Users.findOne({ where: { correo: correo.toLowerCase() } });
-    
+
     if (!nombreUsuario || !contraseña || !correo) {
       res.status(400).send("Debes completar todos los campos de registro");
     }
@@ -60,8 +60,27 @@ const loguearUsuario = async (req, res, next) => {
   }
 }
 
+const eliminarUsuario = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const buscarUsuario = await Users.findOne({ where: { id } });
+
+    if (buscarUsuario) {
+      await buscarUsuario.destroy();
+      res.status(200).send("Usuario eliminado");
+    } else {
+      res.status(400).send("No existe usuario con ese id");
+    }
+  } catch (error) {
+    next(error);
+  }
+
+}
+
+
 module.exports = {
   obtenerUsuarios,
   registrarUsuario,
-  loguearUsuario
+  loguearUsuario,
+  eliminarUsuario
 };
