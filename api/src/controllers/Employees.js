@@ -1,4 +1,5 @@
 const { Employees } = require("../db");
+const { Op } = require("sequelize");
 const axios = require('axios');
 
 const ejecutarBaseDatos = async () => {
@@ -7,11 +8,48 @@ const ejecutarBaseDatos = async () => {
 }
 
 const obtenerEmpleados = async (req, res) => {
-  const obtenerInformacion = await ejecutarBaseDatos();
-  if (!obtenerInformacion.length) {
-    res.status(400).send("La base de datos está vacía");
+  try {
+    const { primerNombre, primerApellido } = req.query;
+    const obtenerInformacion = await ejecutarBaseDatos();
+
+    if (!obtenerInformacion.length) {
+      res.status(400).send("La base de datos está vacía");
+    }
+
+    if (primerNombre) {
+      const buscarEmpleadoNombre = await Employees.findAll({
+        where: {
+          primerNombre: {
+            [Op.iLike]: `%${primerNombre}%`
+          }
+        }
+      });
+      buscarEmpleadoNombre.length ? res.status(200).send(buscarEmpleadoNombre) : res.status(404).send("No existe ningún empleado con ese nombre");
+    } else if (primerApellido) {
+      const buscarEmpleadoApellido = await Employees.findAll({
+        where: {
+          primerNombre: {
+            [Op.iLike]: `%${primerApellido}%`
+          }
+        }
+      });
+      buscarEmpleadoApellido.length ? res.status(200).send(buscarEmpleadoApellido) : res.status(404).send("No existe ningún empleado con ese apellido");
+    }
+    else {
+      res.status(200).send(obtenerInformacion);
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
+const buscarUnEmpleado = async (req, res, next) => {
+  const { id } = req.params;
+  const buscarEmpleado = await Employees.findOne({ where: { id } });
+  if (buscarEmpleado) {
+    res.status(200).send(buscarEmpleado);
   } else {
-    res.status(200).send(obtenerInformacion);
+    res.status(400).send("No existe empleado registrado con ese id");
   }
 }
 
@@ -85,6 +123,7 @@ const eliminarEmpleado = async (req, res, next) => {
 
 module.exports = {
   obtenerEmpleados,
+  buscarUnEmpleado,
   registrarEmpleado,
   actualizarEmpleado,
   eliminarEmpleado

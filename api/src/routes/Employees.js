@@ -3,6 +3,7 @@ const router = express.Router();
 const EmployeesControllers = require('../controllers/Employees');
 
 router.get('/', EmployeesControllers.obtenerEmpleados);
+router.get('/:id', EmployeesControllers.buscarUnEmpleado);
 router.post('/', EmployeesControllers.registrarEmpleado);
 router.put('/:id', EmployeesControllers.actualizarEmpleado);
 router.delete('/:id', EmployeesControllers.eliminarEmpleado);
