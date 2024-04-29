@@ -2,7 +2,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-// const authRouter = require('./routes/auth');
+const employeesRouter = require('./routes/Employees.js');
 require('./db.js');
 
 const server = express();
@@ -20,7 +20,7 @@ server.use((req, res, next) => {
   next();
 });
 
-// server.use('/employees', employees);
+server.use('/employees', employeesRouter);
 
 server.use((err, req, res, next) => {
   const status = err.status || 500;

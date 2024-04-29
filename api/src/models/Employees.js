@@ -15,6 +15,10 @@ module.exports = (sequelize) => {
     segundoApellido: {
       type: DataTypes.STRING
     },
+    edad: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
     foto: {
       type: DataTypes.TEXT
     },
@@ -26,7 +30,7 @@ module.exports = (sequelize) => {
       allowNull: false
     },
     fechaIngreso: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
       allowNull: false
     }
   }, { timestamps: false });
