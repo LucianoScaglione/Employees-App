@@ -7,7 +7,7 @@ const ejecutarBaseDatos = async () => {
   return obtenerInformacion;
 }
 
-const obtenerEmpleados = async (req, res) => {
+const obtenerEmpleados = async (req, res, next) => {
   try {
     const { primerNombre, primerApellido } = req.query;
     const obtenerInformacion = await ejecutarBaseDatos();
@@ -28,7 +28,7 @@ const obtenerEmpleados = async (req, res) => {
     } else if (primerApellido) {
       const buscarEmpleadoApellido = await Employees.findAll({
         where: {
-          primerNombre: {
+          primerApellido: {
             [Op.iLike]: `%${primerApellido}%`
           }
         }
