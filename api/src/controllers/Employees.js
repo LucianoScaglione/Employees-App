@@ -81,19 +81,17 @@ const actualizarEmpleado = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { primerNombre, segundoNombre, primerApellido, segundoApellido, edad, foto, curriculumVitae, puesto } = req.body;
-
     const buscarEmpleado = await Employees.findOne({ where: { id } });
     if (buscarEmpleado) {
-      console.log("empleado: ", buscarEmpleado);
       await buscarEmpleado.update({
-        primerNombre: primerNombre ? primerNombre : buscarEmpleado.primerNombre,
-        segundoNombre: segundoNombre ? segundoNombre : buscarEmpleado.segundoNombre,
-        primerApellido: primerApellido ? primerApellido : buscarEmpleado.primerApellido,
-        segundoApellido: segundoApellido ? segundoApellido : buscarEmpleado.segundoApellido,
-        edad: edad ? edad : buscarEmpleado.edad,
-        foto: foto ? foto : buscarEmpleado.foto,
-        curriculumVitae: curriculumVitae ? curriculumVitae : buscarEmpleado.curriculumVitae,
-        puesto: puesto ? puesto : buscarEmpleado.puesto
+        primerNombre: primerNombre,
+        segundoNombre: segundoNombre,
+        primerApellido: primerApellido,
+        segundoApellido: segundoApellido,
+        edad: edad,
+        foto: foto,
+        curriculumVitae: curriculumVitae,
+        puesto: puesto
       });
       buscarEmpleado.save();
       res.status(200).json({ msg: "La información del empleado fue actualizada", buscarEmpleado });
