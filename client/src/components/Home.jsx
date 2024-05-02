@@ -1,11 +1,16 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { obtenerEmpleados } from "../redux/actions";
+import { obtenerEmpleados, eliminarEmpleado } from "../redux/actions";
 import { Link } from "react-router-dom";
 
 const Home = () => {
   const dispatch = useDispatch();
   const empleados = useSelector(state => state.empleados);
+
+  const handleDelete = (id) => {
+    dispatch(eliminarEmpleado(id));
+  }
+
   useEffect(() => {
     !empleados.length && dispatch(obtenerEmpleados())
   }, [empleados]);
@@ -46,8 +51,8 @@ const Home = () => {
                       <td>
                         <Link to={`/empleado/${empleado.id}`}>
                           <a className="btn btn-info" role="butgon">Editar</a>
-                          |<a className="btn btn-danger" role="button">Eliminar</a>
                         </Link>
+                        |<a className="btn btn-danger" role="button" onClick={() => handleDelete(empleado.id)}>Eliminar</a>
                       </td>
                     </tr>
                   ))

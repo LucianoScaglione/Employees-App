@@ -5,6 +5,7 @@ const backend = 'http://localhost:3001';
 export const OBTENER_EMPLEADOS = "OBTENER_EMPLEADOS";
 export const OBTENER_EMPLEADO = "OBTENER_EMPLEADO";
 export const VACIAR_ESTADO = "VACIAR_ESTADO";
+export const ELIMINAR_EMPLEADO = "ELIMINAR_EMPLEADO";
 
 export const obtenerEmpleados = () => {
   return (dispatch) => {
@@ -53,5 +54,25 @@ export const editarEmpleado = (id, body) => {
 export const vaciarEstado = () => {
   return {
     type: VACIAR_ESTADO
+  }
+};
+
+export const eliminarEmpleado = (id) => {
+  return (dispatch) => {
+    return axios.delete(`${backend}/employees/${id}`)
+      .then(res => {
+        dispatch({ type: ELIMINAR_EMPLEADO, payload: id })
+        Swal.fire({
+          title: "Empleado eliminado de la base de datos correctamente",
+          icon: "success"
+        });
+      })
+      .catch(err => {
+        Swal.fire({
+          icon: "error",
+          title: "No se pudo eliminar el empleado",
+          text: "Ocurrió un error durante la petición",
+        });
+      })
   }
 };

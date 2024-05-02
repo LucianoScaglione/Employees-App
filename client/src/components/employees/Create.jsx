@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { crearEmpleado } from "../../redux/actions";
 
 const Create = () => {
@@ -11,7 +11,8 @@ const Create = () => {
     edad: '',
     foto: '',
     curriculumVitae: '',
-    puesto: ''
+    puesto: '',
+    fechaIngreso: ''
   });
   const dispatch = useDispatch();
 
@@ -33,7 +34,8 @@ const Create = () => {
       edad: '',
       foto: '',
       curriculumVitae: '',
-      puesto: ''
+      puesto: '',
+      fechaIngreso: ''
     });
   };
 
@@ -86,7 +88,7 @@ const Create = () => {
             </div>
             <div class="mb-3">
               <label class="form-label">Fecha de ingreso:</label>
-              <input type="date" class="form-control" />
+              <input type="date" class="form-control" name="fechaIngreso" value={state.fechaIngreso} />
             </div>
             <button type="submit" class="btn btn-success">Agregar registro</button>
             <a class="btn btn-primary" href="/" role="button">Cancelar</a>

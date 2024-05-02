@@ -54,9 +54,7 @@ const buscarUnEmpleado = async (req, res, next) => {
 
 const registrarEmpleado = async (req, res, next) => {
   try {
-    const { primerNombre, segundoNombre, primerApellido, segundoApellido, edad, foto, curriculumVitae, puesto } = req.body;
-
-    const fechaIngreso = new Date().toISOString().slice(0, 10);
+    const { primerNombre, segundoNombre, primerApellido, segundoApellido, edad, foto, curriculumVitae, puesto, fechaIngreso } = req.body;
     // Falta agregar foto y currículum vitae
     const crearEmpleado = await Employees.create({
       primerNombre,
