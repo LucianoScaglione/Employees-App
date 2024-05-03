@@ -2,13 +2,30 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { obtenerEmpleados, eliminarEmpleado } from "../redux/actions";
 import { Link } from "react-router-dom";
+import swal from 'sweetalert';
 
 const Home = () => {
   const dispatch = useDispatch();
   const empleados = useSelector(state => state.empleados);
 
   const handleDelete = (id) => {
-    dispatch(eliminarEmpleado(id));
+    swal({
+      title: "¿Quieres eliminar al empleado?",
+      text: "Se eliminará de la base de datos",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          dispatch(eliminarEmpleado(id));
+          swal("Empleado eliminado correctamente", {
+            icon: "success"
+          });
+        } else {
+          swal("Cancelaste la eliminación");
+        };
+      });
   }
 
   useEffect(() => {
@@ -39,7 +56,7 @@ const Home = () => {
               </thead>
               <tbody>
                 {
-                  empleados.map(empleado => (
+                  empleados.sort((a, b) => a.id - b.id).map(empleado => (
                     <tr key={empleado.id}>
                       <td>{empleado.id}</td>
                       <td>{empleado.primerNombre} {empleado.segundoNombre && empleado.segundoNombre} {empleado.primerApellido}</td>

@@ -47,7 +47,7 @@ export const editarEmpleado = (id, body) => {
   return () => {
     return axios.put(`${backend}/employees/${id.id}`, body)
       .then(res => { return alert('Usuario actualizado') })
-      .catch(err => console.log("Error"))
+      .catch(err => console.log(err))
   }
 };
 
@@ -60,19 +60,7 @@ export const vaciarEstado = () => {
 export const eliminarEmpleado = (id) => {
   return (dispatch) => {
     return axios.delete(`${backend}/employees/${id}`)
-      .then(res => {
-        dispatch({ type: ELIMINAR_EMPLEADO, payload: id })
-        Swal.fire({
-          title: "Empleado eliminado de la base de datos correctamente",
-          icon: "success"
-        });
-      })
-      .catch(err => {
-        Swal.fire({
-          icon: "error",
-          title: "No se pudo eliminar el empleado",
-          text: "Ocurrió un error durante la petición",
-        });
-      })
+      .then(res => dispatch({ type: ELIMINAR_EMPLEADO, payload: id }))
+      .catch(err => console.log(err));
   }
 };
