@@ -9,7 +9,7 @@ const NavBar = () => {
           <a className="nav-link" href="/">Empleados</a>
         </li>
         <li className="nav-item">
-          <a className="nav-link" href="#">Puestos</a>
+          <a className="nav-link" href="/puestos">Puestos</a>
         </li>
         <li className="nav-item">
           <a className="nav-link" href="#">Usuarios</a>

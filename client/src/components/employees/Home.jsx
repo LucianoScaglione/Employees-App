@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { obtenerEmpleados, eliminarEmpleado } from "../redux/actions";
+import { obtenerEmpleados, eliminarEmpleado } from "../../redux/actions";
 import { Link } from "react-router-dom";
 import swal from 'sweetalert';
 
@@ -35,9 +35,7 @@ const Home = () => {
     <div>
       <div className="card">
         <div className="card-header">
-          <Link to='/empleados/registrar'>
-            <a className="btn btn-primary" role="button">Agregar registro</a>
-          </Link>
+          <a className="btn btn-primary" href='/empleados/registrar' role="button">Agregar registro</a>
         </div>
         <div className="card-body">
           <div className="table.responsive-sm">
@@ -67,7 +65,7 @@ const Home = () => {
                       <td>{empleado.fechaIngreso}</td>
                       <td>
                         <Link to={`/empleado/${empleado.id}`}>
-                          <a className="btn btn-info" role="butgon">Editar</a>
+                          <a className="btn btn-info" role="button">Editar</a>
                         </Link>
                         |<a className="btn btn-danger" role="button" onClick={() => handleDelete(empleado.id)}>Eliminar</a>
                       </td>
