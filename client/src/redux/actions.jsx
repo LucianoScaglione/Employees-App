@@ -53,17 +53,17 @@ export const editarEmpleado = (id, body) => {
   }
 };
 
-export const vaciarEstado = () => {
-  return {
-    type: VACIAR_ESTADO
-  }
-};
-
 export const eliminarEmpleado = (id) => {
   return (dispatch) => {
     return axios.delete(`${backend}/employees/${id}`)
       .then(res => dispatch({ type: ELIMINAR_EMPLEADO, payload: id }))
       .catch(err => console.log(err));
+  }
+};
+
+export const vaciarEstado = () => {
+  return {
+    type: VACIAR_ESTADO
   }
 };
 
@@ -92,6 +92,26 @@ export const crearUsuario = (body) => {
         });
       })
 
+  }
+};
+
+export const loguearUsuario = (body) => {
+  return () => {
+    return axios.post(`${backend}/users/login`, body)
+      .then(res => {
+        localStorage.setItem('usuarioToken', JSON.stringify(res.data));
+        return res
+      })
+      .catch(err => console.log(err))
+  }
+};
+
+export const informacionUsuario = () => {
+  const usuario = localStorage.getItem("usuarioToken");
+  if (usuario) {
+    return JSON.parse(usuario);
+  } else {
+    return {};
   }
 }
 

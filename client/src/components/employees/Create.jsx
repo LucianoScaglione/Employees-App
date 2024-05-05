@@ -91,7 +91,7 @@ const Create = () => {
               <input type="date" class="form-control" name="fechaIngreso" value={state.fechaIngreso} />
             </div>
             <button type="submit" class="btn btn-success">Agregar registro</button>
-            <a class="btn btn-primary" href="/" role="button">Cancelar</a>
+            <a class="btn btn-primary" href="/empleados" role="button">Cancelar</a>
           </form>
         </div>
         <div className="card-footer text-muted">

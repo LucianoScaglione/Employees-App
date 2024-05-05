@@ -40,7 +40,7 @@ const Create = () => {
             </div>
             <div class="mb-3">
               <label class="form-label">Contraseña:</label>
-              <input type="text" class="form-control" name="contraseña" value={state.contraseña} placeholder="Escriba su contraseña" />
+              <input type="password" class="form-control" name="contraseña" value={state.contraseña} placeholder="Escriba su contraseña" />
             </div>
             <div class="mb-3">
               <label class="form-label">Correo:</label>
