@@ -78,7 +78,7 @@ const registrarEmpleado = async (req, res, next) => {
 const actualizarEmpleado = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { primerNombre, segundoNombre, primerApellido, segundoApellido, edad, foto, curriculumVitae, puesto } = req.body;
+    const { primerNombre, segundoNombre, primerApellido, segundoApellido, edad, foto, curriculumVitae, puesto, fechaIngreso } = req.body;
     const buscarEmpleado = await Employees.findOne({ where: { id } });
     if (buscarEmpleado) {
       await buscarEmpleado.update({
@@ -89,7 +89,8 @@ const actualizarEmpleado = async (req, res, next) => {
         edad: edad,
         foto: foto,
         curriculumVitae: curriculumVitae,
-        puesto: puesto
+        puesto: puesto,
+        fechaIngreso: fechaIngreso
       });
       buscarEmpleado.save();
       res.status(200).json({ msg: "La información del empleado fue actualizada", buscarEmpleado });

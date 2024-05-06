@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { obtenerEmpleado, editarEmpleado, vaciarEstado } from "../../redux/actions";
 import { useParams } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 
 const Edit = () => {
   const [state, setState] = useState({
@@ -12,12 +13,14 @@ const Edit = () => {
     edad: '',
     foto: '',
     curriculumVitae: '',
-    puesto: ''
+    puesto: '',
+    fechaIngreso: ''
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState('');
   const idEmpleado = useParams();
   const dispatch = useDispatch();
   const empleado = useSelector(state => state.empleado);
+  const history = useHistory();
 
   const handleChange = (e) => {
     setState({
@@ -29,6 +32,10 @@ const Edit = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(editarEmpleado(idEmpleado, state));
+    history.push('/empleados');
+    setTimeout(() => {
+      window.location.reload()
+    }, 3000);
   }
 
   useEffect(() => {
@@ -48,35 +55,74 @@ const Edit = () => {
         edad: empleado.edad,
         foto: empleado.foto,
         curriculumVitae: empleado.curriculumVitae,
-        puesto: empleado.puesto
+        puesto: empleado.puesto,
+        fechaIngreso: empleado.fechaIngreso
       })
     }
   }, [empleado]);
   if (!loading) {
-    return <h1>Cargandoo</h1>
+    return <h1>Cargando...</h1>
   }
   return (
     <div>
-      <div>
-        <form onChange={handleChange}>
-          <input type="text" name="primerNombre" defaultValue={state.primerNombre} />
-          <input type="text" name="segundoNombre" defaultValue={state.segundoNombre} />
-          <input type="text" name="primerApellido" defaultValue={state.primerApellido} />
-          <input type="text" name="segundoApellido" defaultValue={state.segundoApellido} />
-          <input type="number" name="edad" defaultValue={state.edad} />
-          <select name="puesto">
-            <option hidden>{state.puesto}</option>
-            <option value="Programador Trainee">Programador Trainee</option>
-            <option value="Programador Junior">Programador Junior</option>
-            <option value="Programador Semi Senior">Programador Semi Senior</option>
-            <option value="Programador Senior">Programador Senior</option>
-            <option value="Tester Js">Tester Js</option>
-            <option value="Líder de proyectos">Líder de proyectos</option>
-          </select>
-          <input type="submit" value="Actualizar empleado" onClick={(e) => handleSubmit(e)} />
-        </form>
+      <br />
+      <div className="card">
+        <div className="card-header">Datos del empleado</div>
+        <div className="card-body">
+          <form encType="multipart/form-data" onChange={handleChange}>
+            <div className="mb-3">
+              <label className="form-label">Primer nombre</label>
+              <input type="text" className="form-control" name="primerNombre" value={state.primerNombre} placeholder="Primer nombre" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Segundo nombre</label>
+              <input type="text" class="form-control" name="segundoNombre" value={state.segundoNombre} placeholder="Segundo nombre" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Primer apellido</label>
+              <input type="text" class="form-control" name="primerApellido" value={state.primerApellido} placeholder="Primer apellido" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Segundo apellido</label>
+              <input type="text" class="form-control" name="segundoApellido" value={state.segundoApellido} placeholder="Segundo apellido" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Edad</label>
+              <input type="text" class="form-control" name="edad" value={state.edad} placeholder="Edad" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Foto:</label>
+              <input type="file" class="form-control" name="foto" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">CV(PDF):</label>
+              <input type="file" class="form-control" name="curriculumVitae" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Puesto:</label>
+              <select class="form-select form-select-sm" name="puesto" value={state.puesto} >
+                <option selected>Seleccione uno</option>
+                <option value="Programador Trainee">Programador Trainee</option>
+                <option value="Programador Junior">Programador Junior</option>
+                <option value="Programador Semi Senior">Programador Semi Senior</option>
+                <option value="Programador Senior">Programador Senior</option>
+                <option value="Tester Qa">Tester Qa</option>
+                <option value="Líder de proyectos">Líder de proyectos</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Fecha de ingreso:</label>
+              <input type="date" class="form-control" name="fechaIngreso" value={state.fechaIngreso} />
+            </div>
+            <button type="submit" class="btn btn-success" onClick={(e) => handleSubmit(e)}>Actualizar registro</button>
+            <a class="btn btn-primary" href="/empleados" role="button">Cancelar</a>
+          </form>
+        </div>
+        <div className="card-footer text-muted">
+        </div>
       </div>
     </div>
+
   )
 }
 

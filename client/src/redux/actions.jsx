@@ -48,8 +48,19 @@ export const crearEmpleado = (body) => {
 export const editarEmpleado = (id, body) => {
   return () => {
     return axios.put(`${backend}/employees/${id.id}`, body)
-      .then(res => { return alert('Usuario actualizado') })
-      .catch(err => console.log(err))
+      .then(res => {
+        Swal.fire({
+          title: "¡Buen trabajo!",
+          text: "Empleado actualizado correctamente",
+          icon: "success"
+        });
+      })
+      .catch(err => {
+        Swal.fire({
+          icon: "error",
+          title: err.response.data,
+        });
+      })
   }
 };
 
@@ -102,7 +113,10 @@ export const loguearUsuario = (body) => {
         localStorage.setItem('usuarioToken', JSON.stringify(res.data));
         return res
       })
-      .catch(err => console.log(err))
+      .catch(err => Swal.fire({
+        icon: "error",
+        title: err.response.data,
+      }))
   }
 };
 
