@@ -30,27 +30,27 @@ const Create = () => {
 
   return (
     <div>
-      <div class="card">
-        <div class="card-header">Datos del usuario</div>
-        <div class="card-body">
+      <div className="card">
+        <div className="card-header">Datos del usuario</div>
+        <div className="card-body">
           <form onChange={handleChange}>
-            <div class="mb-3">
-              <label class="form-label">Nombre del usuario:</label>
-              <input type="text" class="form-control" name="nombreUsuario" value={state.nombreUsuario} placeholder="Nombre del usuario" />
+            <div className="mb-3">
+              <label className="form-label">Nombre del usuario:</label>
+              <input type="text" className="form-control" name="nombreUsuario" value={state.nombreUsuario} placeholder="Nombre del usuario" />
             </div>
-            <div class="mb-3">
-              <label class="form-label">Contraseña:</label>
-              <input type="password" class="form-control" name="contraseña" value={state.contraseña} placeholder="Escriba su contraseña" />
+            <div className="mb-3">
+              <label className="form-label">Contraseña:</label>
+              <input type="password" className="form-control" name="contraseña" value={state.contraseña} placeholder="Escriba su contraseña" />
             </div>
-            <div class="mb-3">
-              <label class="form-label">Correo:</label>
-              <input type="email" class="form-control" name="correo" value={state.correo} placeholder="Escriba su correo electrónico" />
+            <div className="mb-3">
+              <label className="form-label">Correo:</label>
+              <input type="email" className="form-control" name="correo" value={state.correo} placeholder="Escriba su correo electrónico" />
             </div>
-            <button type="submit" class="btn btn-success" onClick={(e) => handleSubmit(e)}>Agregar</button>
-            <a class="btn btn-primary" href="/usuarios" role="button">Cancelar</a>
+            <button type="submit" className="btn btn-success" onClick={(e) => handleSubmit(e)}>Agregar</button>
+            <a className="btn btn-primary" href="/usuarios" role="button">Cancelar</a>
           </form>
         </div>
-        <div class="card-footer text-muted"></div>
+        <div className="card-footer text-muted"></div>
       </div>
 
     </div>

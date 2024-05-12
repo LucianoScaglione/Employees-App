@@ -6,14 +6,14 @@ const Home = () => {
   ];
   return (
     <div>
-      <div class="card">
-        <div class="card-header">
+      <div className="card">
+        <div className="card-header">
           <a className="btn btn-primary" href="/puestos/crear" role="button">Agregar registro</a>
         </div>
-        <div class="card-body">
+        <div className="card-body">
           <div
-            class="table-responsive-sm" >
-            <table class="table">
+            className="table-responsive-sm" >
+            <table className="table">
               <thead>
                 <tr>
                   <th scope="col">Id</th>
@@ -24,13 +24,13 @@ const Home = () => {
               <tbody>
                 {
                   puestos.map(p => (
-                    <tr class="">
+                    <tr className="">
                       <td scope="row">{p.id}</td>
                       <td>{p.puesto}</td>
                       <td>
-                        <input class="btn btn-info" type="button" value="Editar" />
+                        <input className="btn btn-info" type="button" value="Editar" />
                         |
-                        <input class="btn btn-danger" type="button" value="Eliminar" />
+                        <input className="btn btn-danger" type="button" value="Eliminar" />
                       </td>
                     </tr>
                   ))

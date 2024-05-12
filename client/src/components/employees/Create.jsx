@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { crearEmpleado } from "../../redux/actions";
+import { useHistory } from "react-router-dom";
 
 const Create = () => {
   const [state, setState] = useState({
@@ -16,6 +17,7 @@ const Create = () => {
   const [foto, setFoto] = useState('');
 
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const handleChange = (e) => {
     setState({
@@ -53,6 +55,7 @@ const Create = () => {
       fechaIngreso: ''
     });
     setFoto('');
+    history.push("/empleados");
   };
   return (
     <div>
@@ -65,33 +68,33 @@ const Create = () => {
               <label className="form-label">Primer nombre</label>
               <input type="text" className="form-control" name="primerNombre" value={state.primerNombre} placeholder="Primer nombre" />
             </div>
-            <div class="mb-3">
-              <label class="form-label">Segundo nombre</label>
-              <input type="text" class="form-control" name="segundoNombre" value={state.segundoNombre} placeholder="Segundo nombre" />
+            <div className="mb-3">
+              <label className="form-label">Segundo nombre</label>
+              <input type="text" className="form-control" name="segundoNombre" value={state.segundoNombre} placeholder="Segundo nombre" />
             </div>
-            <div class="mb-3">
-              <label class="form-label">Primer apellido</label>
-              <input type="text" class="form-control" name="primerApellido" value={state.primerApellido} placeholder="Primer apellido" />
+            <div className="mb-3">
+              <label className="form-label">Primer apellido</label>
+              <input type="text" className="form-control" name="primerApellido" value={state.primerApellido} placeholder="Primer apellido" />
             </div>
-            <div class="mb-3">
-              <label class="form-label">Segundo apellido</label>
-              <input type="text" class="form-control" name="segundoApellido" value={state.segundoApellido} placeholder="Segundo apellido" />
+            <div className="mb-3">
+              <label className="form-label">Segundo apellido</label>
+              <input type="text" className="form-control" name="segundoApellido" value={state.segundoApellido} placeholder="Segundo apellido" />
             </div>
-            <div class="mb-3">
-              <label class="form-label">Edad</label>
-              <input type="text" class="form-control" name="edad" value={state.edad} placeholder="Edad" />
+            <div className="mb-3">
+              <label className="form-label">Edad</label>
+              <input type="text" className="form-control" name="edad" value={state.edad} placeholder="Edad" />
             </div>
-            <div class="mb-3">
-              <label class="form-label">Foto:</label>
-              <input type="file" class="form-control" accept="image/png, image/jpeg" name="foto" defaultValue={foto} onChange={e => convertirBase64(e.target.files)} />
+            <div className="mb-3">
+              <label className="form-label">Foto:</label>
+              <input type="file" className="form-control" accept="image/png, image/jpeg" name="foto" defaultValue={foto} onChange={e => convertirBase64(e.target.files)} />
             </div>
-            <div class="mb-3">
-              <label class="form-label">CV(PDF):</label>
-              <input type="file" class="form-control" name="curriculumVitae" />
+            <div className="mb-3">
+              <label className="form-label">CV(PDF):</label>
+              <input type="file" className="form-control" name="curriculumVitae" />
             </div>
-            <div class="mb-3">
-              <label class="form-label">Puesto:</label>
-              <select class="form-select form-select-sm" name="puesto" value={state.puesto} >
+            <div className="mb-3">
+              <label className="form-label">Puesto:</label>
+              <select className="form-select form-select-sm" name="puesto" value={state.puesto} >
                 <option selected>Seleccione uno</option>
                 <option value="Programador Trainee">Programador Trainee</option>
                 <option value="Programador Junior">Programador Junior</option>
@@ -101,12 +104,12 @@ const Create = () => {
                 <option value="Líder de proyectos">Líder de proyectos</option>
               </select>
             </div>
-            <div class="mb-3">
-              <label class="form-label">Fecha de ingreso:</label>
-              <input type="date" class="form-control" name="fechaIngreso" value={state.fechaIngreso} />
+            <div className="mb-3">
+              <label className="form-label">Fecha de ingreso:</label>
+              <input type="date" className="form-control" name="fechaIngreso" value={state.fechaIngreso} />
             </div>
-            <button type="submit" class="btn btn-success">Agregar registro</button>
-            <a class="btn btn-primary" href="/empleados" role="button">Cancelar</a>
+            <button type="submit" className="btn btn-success">Agregar registro</button>
+            <a className="btn btn-primary" href="/empleados" role="button">Cancelar</a>
           </form>
         </div>
         <div className="card-footer text-muted">
