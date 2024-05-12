@@ -7,7 +7,7 @@ import swal from 'sweetalert';
 const Home = () => {
   const dispatch = useDispatch();
   const empleados = useSelector(state => state.empleados);
-
+ 
   const handleDelete = (id) => {
     swal({
       title: "¿Quieres eliminar al empleado?",
@@ -58,7 +58,7 @@ const Home = () => {
                     <tr key={empleado.id}>
                       <td>{empleado.id}</td>
                       <td>{empleado.primerNombre} {empleado.segundoNombre && empleado.segundoNombre} {empleado.primerApellido}</td>
-                      <td>""</td>
+                      <td><img width="100" src={empleado.foto} className="rounded" alt='' /></td>
                       <td>""</td>
                       <td>{empleado.puesto}</td>
                       <td>{empleado.edad}</td>

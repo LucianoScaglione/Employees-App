@@ -1,5 +1,6 @@
 const { Employees } = require("../db");
 const { Op } = require("sequelize");
+const fs = require('fs');
 
 const ejecutarBaseDatos = async () => {
   const obtenerInformacion = await Employees.findAll();
@@ -55,21 +56,26 @@ const buscarUnEmpleado = async (req, res, next) => {
 const registrarEmpleado = async (req, res, next) => {
   try {
     const { primerNombre, segundoNombre, primerApellido, segundoApellido, edad, foto, curriculumVitae, puesto, fechaIngreso } = req.body;
-    // Falta agregar foto y currículum vitae
+
+    let decodificarLink = Buffer.from(foto, 'base64');
+    let nombreImagenGuardada = `${Date.now()}.png`;
+    let AlmacenamientoLinkImagen = `uploads/${nombreImagenGuardada}`;
+    let linkImagenARenderizar = `uploads/${nombreImagenGuardada}`;
+    fs.writeFileSync(AlmacenamientoLinkImagen, decodificarLink);
+
     const crearEmpleado = await Employees.create({
       primerNombre,
       segundoNombre,
       primerApellido,
       segundoApellido,
       edad,
-      foto,
+      foto: `http://localhost:3001/${linkImagenARenderizar}`,
       curriculumVitae,
       puesto,
       fechaIngreso
     });
 
     res.status(200).json({ creado: true, crearEmpleado });
-
   } catch (error) {
     next(error);
   }

@@ -9,11 +9,12 @@ const Create = () => {
     primerApellido: '',
     segundoApellido: '',
     edad: '',
-    foto: '',
     curriculumVitae: '',
     puesto: '',
     fechaIngreso: ''
   });
+  const [foto, setFoto] = useState('');
+
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
@@ -23,22 +24,36 @@ const Create = () => {
     })
   };
 
+  const convertirBase64 = (imagen) => {
+    Array.from(imagen).forEach(archivo => {
+      const reader = new FileReader();
+      reader.readAsDataURL(archivo);
+      reader.onload = () => {
+        const base64 = reader.result.split(',')[1];
+        setFoto(base64);
+      };
+      reader.onerror = (error) => {
+        console.log('Error al leer el archivo:', error);
+      };
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(crearEmpleado(state));
+    const datosEmpleado = { ...state, foto };
+    dispatch(crearEmpleado(datosEmpleado));
     setState({
       primerNombre: '',
       segundoNombre: '',
       primerApellido: '',
       segundoApellido: '',
       edad: '',
-      foto: '',
       curriculumVitae: '',
       puesto: '',
       fechaIngreso: ''
     });
+    setFoto('');
   };
-
   return (
     <div>
       <br />
@@ -68,7 +83,7 @@ const Create = () => {
             </div>
             <div class="mb-3">
               <label class="form-label">Foto:</label>
-              <input type="file" class="form-control" name="foto" />
+              <input type="file" class="form-control" accept="image/png, image/jpeg" name="foto" defaultValue={foto} onChange={e => convertirBase64(e.target.files)} />
             </div>
             <div class="mb-3">
               <label class="form-label">CV(PDF):</label>
