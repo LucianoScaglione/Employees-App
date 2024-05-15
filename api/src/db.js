@@ -22,7 +22,10 @@ let entries = Object.entries(sequelize.models);
 let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-const { Employees, Users } = sequelize.models;
+const { Employees, Users, Positions } = sequelize.models;
+
+Employees.belongsTo(Positions, { through: 'employees_positions' });
+Positions.belongsToMany(Employees, { through: 'employees_positions' });
 
 module.exports = {
   ...sequelize.models,
