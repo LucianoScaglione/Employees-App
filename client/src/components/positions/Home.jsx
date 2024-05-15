@@ -1,9 +1,14 @@
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { obtenerPuestos } from '../../redux/actions';
+
 const Home = () => {
-  const puestos = [
-    { "id": 1, "puesto": "Programador Trainee" }, { "id": 2, "puesto": "Programador Junior" },
-    { "id": 3, "puesto": "Programador Semi Senior" }, { "id": 4, "puesto": "Programador Senior" },
-    { "id": 5, "puesto": "Tester Qa" }, { "id": 6, "puesto": "Líder de proyectos" }
-  ];
+  const dispatch = useDispatch();
+  const puestos = useSelector(state => state.puestos)
+
+  useEffect(() => {
+    dispatch(obtenerPuestos());
+  }, [dispatch]);
   return (
     <div>
       <div className="card">
@@ -23,10 +28,10 @@ const Home = () => {
               </thead>
               <tbody>
                 {
-                  puestos.map(p => (
+                  puestos.map(puesto => (
                     <tr className="">
-                      <td scope="row">{p.id}</td>
-                      <td>{p.puesto}</td>
+                      <td scope="row">{puesto.id}</td>
+                      <td>{puesto.puesto}</td>
                       <td>
                         <input className="btn btn-info" type="button" value="Editar" />
                         |

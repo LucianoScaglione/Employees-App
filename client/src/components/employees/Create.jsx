@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { crearEmpleado } from "../../redux/actions";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { crearEmpleado, obtenerPuestos } from "../../redux/actions";
 import { useHistory } from "react-router-dom";
 
 const Create = () => {
@@ -11,11 +11,12 @@ const Create = () => {
     segundoApellido: '',
     edad: '',
     curriculumVitae: '',
-    puesto: '',
-    fechaIngreso: ''
+    fechaIngreso: '',
+    puestoId: 0
   });
   const [foto, setFoto] = useState('');
 
+  const puestos = useSelector(state => state.puestos);
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -51,12 +52,16 @@ const Create = () => {
       segundoApellido: '',
       edad: '',
       curriculumVitae: '',
-      puesto: '',
-      fechaIngreso: ''
+      fechaIngreso: '',
+      puestoId: 0
     });
     setFoto('');
     history.push("/empleados");
   };
+
+  useEffect(() => {
+    dispatch(obtenerPuestos())
+  }, [dispatch]);
   return (
     <div>
       <br />
@@ -94,14 +99,13 @@ const Create = () => {
             </div>
             <div className="mb-3">
               <label className="form-label">Puesto:</label>
-              <select className="form-select form-select-sm" name="puesto" value={state.puesto} >
+              <select className="form-select form-select-sm" name="puestoId">
                 <option selected>Seleccione uno</option>
-                <option value="Programador Trainee">Programador Trainee</option>
-                <option value="Programador Junior">Programador Junior</option>
-                <option value="Programador Semi Senior">Programador Semi Senior</option>
-                <option value="Programador Senior">Programador Senior</option>
-                <option value="Tester Qa">Tester Qa</option>
-                <option value="Líder de proyectos">Líder de proyectos</option>
+                {
+                  puestos.map(puesto => (
+                    <option value={puesto.id}>{puesto.puesto}</option>
+                  ))
+                }
               </select>
             </div>
             <div className="mb-3">

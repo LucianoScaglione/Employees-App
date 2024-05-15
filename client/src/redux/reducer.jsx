@@ -1,10 +1,11 @@
-import { OBTENER_EMPLEADOS, OBTENER_EMPLEADO, VACIAR_ESTADO, ELIMINAR_EMPLEADO, OBTENER_USUARIOS, ELIMINAR_USUARIO } from './actions';
+import { OBTENER_EMPLEADOS, OBTENER_EMPLEADO, VACIAR_ESTADO, ELIMINAR_EMPLEADO, OBTENER_USUARIOS, ELIMINAR_USUARIO, OBTENER_PUESTOS } from './actions';
 
 const initialState = {
   empleados: [],
   empleadosCopia: [],
   empleado: [],
-  usuarios: []
+  usuarios: [],
+  puestos: []
 }
 
 const reducer = (state = initialState, { type, payload }) => {
@@ -47,7 +48,13 @@ const reducer = (state = initialState, { type, payload }) => {
         ...state,
         usuarios: usuarioEliminado
       }
-    }
+    };
+    case OBTENER_PUESTOS: {
+      return {
+        ...state,
+        puestos: payload
+      }
+    };
     default: return state;
   }
 }

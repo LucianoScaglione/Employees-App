@@ -27,7 +27,7 @@ const Home = () => {
         };
       });
   }
-
+  console.log("empleados: ", empleados);
   useEffect(() => {
     !empleados.length && dispatch(obtenerEmpleados())
   }, [empleados]);
@@ -60,7 +60,7 @@ const Home = () => {
                       <td>{empleado.primerNombre} {empleado.segundoNombre && empleado.segundoNombre} {empleado.primerApellido}</td>
                       <td><img width="100" height="70" src={empleado.foto} className="rounded" alt='' /></td>
                       <td>""</td>
-                      <td>{empleado.puesto}</td>
+                      <td>{empleado.Position.puesto}</td>
                       <td>{empleado.edad}</td>
                       <td>{empleado.fechaIngreso}</td>
                       <td>

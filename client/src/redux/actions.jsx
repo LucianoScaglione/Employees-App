@@ -8,6 +8,7 @@ export const VACIAR_ESTADO = "VACIAR_ESTADO";
 export const ELIMINAR_EMPLEADO = "ELIMINAR_EMPLEADO";
 export const OBTENER_USUARIOS = "OBTENER_USUARIOS";
 export const ELIMINAR_USUARIO = "ELIMINAR_USUARIO";
+export const OBTENER_PUESTOS = "OBTENER_PUESTOS";
 
 export const obtenerEmpleados = () => {
   return (dispatch) => {
@@ -133,6 +134,14 @@ export const eliminarUsuario = (id) => {
   return (dispatch) => {
     return axios.delete(`${backend}/users/${id}`)
       .then(res => dispatch({ type: ELIMINAR_USUARIO, payload: id }))
+      .catch(err => console.log(err))
+  }
+};
+
+export const obtenerPuestos = () => {
+  return (dispatch) => {
+    return axios.get(`${backend}/positions`)
+      .then(res => dispatch({ type: OBTENER_PUESTOS, payload: res.data }))
       .catch(err => console.log(err))
   }
 };

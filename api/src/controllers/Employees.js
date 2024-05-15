@@ -45,7 +45,7 @@ const obtenerEmpleados = async (req, res, next) => {
 
 const buscarUnEmpleado = async (req, res, next) => {
   const { id } = req.params;
-  const buscarEmpleado = await Employees.findOne({ where: { id } });
+  const buscarEmpleado = await Employees.findOne({ where: { id }, include: Positions });
   if (buscarEmpleado) {
     res.status(200).send(buscarEmpleado);
   } else {
@@ -56,7 +56,6 @@ const buscarUnEmpleado = async (req, res, next) => {
 const registrarEmpleado = async (req, res, next) => {
   try {
     const { primerNombre, segundoNombre, primerApellido, segundoApellido, edad, foto, curriculumVitae, puestoId, fechaIngreso } = req.body;
-
     let decodificarLink = Buffer.from(foto, 'base64');
     let nombreImagenGuardada = `${Date.now()}.png`;
     let AlmacenamientoLinkImagen = `uploads/${nombreImagenGuardada}`;

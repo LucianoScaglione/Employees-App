@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { obtenerEmpleado, editarEmpleado, vaciarEstado } from "../../redux/actions";
+import { obtenerEmpleado, editarEmpleado, vaciarEstado, obtenerPuestos } from "../../redux/actions";
 import { useParams } from "react-router-dom";
 import { useHistory } from 'react-router-dom';
 
@@ -13,14 +13,15 @@ const Edit = () => {
     edad: '',
     foto: '',
     curriculumVitae: '',
-    puesto: '',
-    fechaIngreso: ''
+    fechaIngreso: '',
+    puestoId: 0,
   });
   const [nuevaFoto, setNuevaFoto] = useState('');
   const [loading, setLoading] = useState('');
   const idEmpleado = useParams();
   const dispatch = useDispatch();
   const empleado = useSelector(state => state.empleado);
+  const puestos = useSelector(state => state.puestos);
   const history = useHistory();
 
   const handleChange = (e) => {
@@ -29,7 +30,6 @@ const Edit = () => {
       [e.target.name]: e.target.value
     })
   };
-
   const base64Imagen = (imagen) => {
     Array.from(imagen).forEach(archivo => {
       const reader = new FileReader();
@@ -56,6 +56,7 @@ const Edit = () => {
 
   useEffect(() => {
     !empleado.length && dispatch(obtenerEmpleado(idEmpleado.id)).then(setLoading(true));
+    dispatch(obtenerPuestos())
     return () => {
       dispatch(vaciarEstado());
     }
@@ -71,8 +72,8 @@ const Edit = () => {
         edad: empleado.edad,
         foto: empleado.foto,
         curriculumVitae: empleado.curriculumVitae,
-        puesto: empleado.puesto,
-        fechaIngreso: empleado.fechaIngreso
+        fechaIngreso: empleado.fechaIngreso,
+        puestoId: empleado.Position?.puesto
       })
     }
   }, [empleado]);
@@ -117,15 +118,16 @@ const Edit = () => {
             </div>
             <div className="mb-3">
               <label className="form-label">Puesto:</label>
-              <select className="form-select form-select-sm" name="puesto" value={state.puesto} >
-                <option selected>Seleccione uno</option>
-                <option value="Programador Trainee">Programador Trainee</option>
-                <option value="Programador Junior">Programador Junior</option>
-                <option value="Programador Semi Senior">Programador Semi Senior</option>
-                <option value="Programador Senior">Programador Senior</option>
-                <option value="Tester Qa">Tester Qa</option>
-                <option value="Líder de proyectos">Líder de proyectos</option>
+              ///// revisar esto
+              <select className="form-select form-select-sm" name="puestoId">
+                <option selected>{state.puestoId}</option>
+                {
+                  puestos.map(puesto => (
+                    <option value={puesto.id}>{puesto.puesto}</option>
+                  ))
+                }
               </select>
+              /////
             </div>
             <div className="mb-3">
               <label className="form-label">Fecha de ingreso:</label>
