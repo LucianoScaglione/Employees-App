@@ -30,14 +30,13 @@ const Home = () => {
   }, [dispatch]);
   return (
     <div>
-      <div class="card">
-        <div class="card-header">
+      <div className="card">
+        <div className="card-header">
           <a className="btn btn-primary" href="/usuarios/registrar" role="button">Agregar registro</a>
         </div>
-        <div class="card-body">
-          <div
-            class="table-responsive-sm" >
-            <table class="table">
+        <div className="card-body">
+          <div className="table-responsive-sm" >
+            <table className="table">
               <thead>
                 <tr>
                   <th scope="col">Id</th>
@@ -50,15 +49,15 @@ const Home = () => {
               <tbody>
                 {
                   usuarios.map(usuario => (
-                    <tr class="">
+                    <tr key={usuario.id}>
                       <td scope="row">{usuario.id}</td>
                       <td>{usuario.nombreUsuario}</td>
                       <td>********</td>
                       <td>{usuario.correo}</td>
                       <td>
-                        <input class="btn btn-info" type="button" value="Editar" />
+                        <input className="btn btn-info" type="button" value="Editar" />
                         |
-                        <input class="btn btn-danger" type="button" value="Eliminar" onClick={(e) => handleDelete(e, usuario.id)} />
+                        <input className="btn btn-danger" type="button" value="Eliminar" onClick={(e) => handleDelete(e, usuario.id)} />
                       </td>
                     </tr>
                   ))

@@ -27,7 +27,6 @@ const Home = () => {
         };
       });
   }
-  console.log("empleados: ", empleados);
   useEffect(() => {
     !empleados.length && dispatch(obtenerEmpleados())
   }, [empleados]);

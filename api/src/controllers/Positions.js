@@ -24,7 +24,23 @@ const crearPuesto = async (req, res, next) => {
   }
 };
 
+const eliminarPuesto = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const buscarPuesto = await Positions.findOne({ where: { id } });
+    if (!buscarPuesto) {
+      res.status(400).send("No existe puesto registrado con ese id");
+    } else {
+      await Positions.destroy({ where: { id } });
+      res.status(200).send("El puesto fue eliminado de la base de datos");
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   obtenerPuestos,
-  crearPuesto
+  crearPuesto,
+  eliminarPuesto
 }

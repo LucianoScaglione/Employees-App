@@ -1,10 +1,27 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { obtenerPuestos } from '../../redux/actions';
+import { eliminarPuesto, obtenerPuestos } from '../../redux/actions';
 
 const Home = () => {
   const dispatch = useDispatch();
   const puestos = useSelector(state => state.puestos)
+
+  const handleDelete = (id) => {
+    swal({
+      title: "¿Seguro que quieres eliminar el puesto?",
+      text: "Se eliminará de la base de datos",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          dispatch(eliminarPuesto(id));
+        } else {
+          swal("Cancelaste la eliminación");
+        };
+      });
+  }
 
   useEffect(() => {
     dispatch(obtenerPuestos());
@@ -29,13 +46,13 @@ const Home = () => {
               <tbody>
                 {
                   puestos.map(puesto => (
-                    <tr className="">
+                    <tr key={puesto.id}>
                       <td scope="row">{puesto.id}</td>
                       <td>{puesto.puesto}</td>
                       <td>
                         <input className="btn btn-info" type="button" value="Editar" />
                         |
-                        <input className="btn btn-danger" type="button" value="Eliminar" />
+                        <input className="btn btn-danger" type="button" value="Eliminar" onClick={() => handleDelete(puesto.id)} />
                       </td>
                     </tr>
                   ))

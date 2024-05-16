@@ -1,19 +1,32 @@
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { crearPuestos } from '../../redux/actions';
+
 const Create = () => {
+  const [puesto, setPuesto] = useState({ puesto: '' });
+  const dispatch = useDispatch();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(crearPuestos(puesto));
+    setPuesto({ puesto: '' });
+  };
+
   return (
     <div>
-      <div class="card">
-        <div class="card-header">Puestos</div>
-        <div class="card-body">
-          <form encType="multipart/form-data">
-            <div class="mb-3">
-              <label class="form-label">Nombre del puesto:</label>
-              <input type="text" class="form-control" placeholder="Nombre del puesto" />
+      <div className="card">
+        <div className="card-header">Puestos</div>
+        <div className="card-body">
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label className="form-label">Nombre del puesto:</label>
+              <input type="text" className="form-control" placeholder="Nombre del puesto" value={puesto.puesto} onChange={(e) => setPuesto({ puesto: e.target.value })} />
             </div>
-            <button type="submit" class="btn btn-success">Agregar</button>
-            <a class="btn btn-primary" href="/puestos" role="button">Cancelar</a>
+            <button type="submit" className="btn btn-success">Agregar</button>
+            <a className="btn btn-primary" href="/puestos" role="button">Cancelar</a>
           </form>
         </div>
-        <div class="card-footer text-muted"></div>
+        <div className="card-footer text-muted"></div>
       </div>
 
     </div>

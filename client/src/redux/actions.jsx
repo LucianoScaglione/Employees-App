@@ -9,6 +9,7 @@ export const ELIMINAR_EMPLEADO = "ELIMINAR_EMPLEADO";
 export const OBTENER_USUARIOS = "OBTENER_USUARIOS";
 export const ELIMINAR_USUARIO = "ELIMINAR_USUARIO";
 export const OBTENER_PUESTOS = "OBTENER_PUESTOS";
+export const ELIMINAR_PUESTO = "ELIMINAR_PUESTO";
 
 export const obtenerEmpleados = () => {
   return (dispatch) => {
@@ -145,3 +146,33 @@ export const obtenerPuestos = () => {
       .catch(err => console.log(err))
   }
 };
+
+export const crearPuestos = (body) => {
+  return () => {
+    return axios.post(`${backend}/positions`, body)
+      .then(res => Swal.fire({
+        title: "¡Buen trabajo!",
+        text: "Puesto registrado correctamente",
+        icon: "success"
+      }))
+      .catch(err => Swal.fire({
+        icon: "error",
+        title: err.response.data,
+      }))
+  }
+};
+
+export const eliminarPuesto = (id) => {
+  return (dispatch) => {
+    return axios.delete(`${backend}/positions/${id}`)
+      .then(res => dispatch({ type: ELIMINAR_PUESTO, payload: id }))
+      .then(Swal.fire({
+        title: "Puesto eliminado correctamente",
+        icon: "success"
+      }))
+      .catch(err => Swal.fire({
+        icon: "error",
+        title: err.response.data,
+      }))
+  }
+}
