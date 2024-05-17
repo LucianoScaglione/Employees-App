@@ -9,6 +9,20 @@ const obtenerPuestos = async (req, res, next) => {
   }
 };
 
+const obtenerPuesto = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const buscarPuesto = await Positions.findOne({ where: { id } });
+    if (buscarPuesto) {
+      res.status(200).send(buscarPuesto);
+    } else {
+      res.status(400).send("No se encontró ningún puesto con ese id");
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 const crearPuesto = async (req, res, next) => {
   try {
     const { puesto } = req.body;
@@ -23,6 +37,23 @@ const crearPuesto = async (req, res, next) => {
     next(error);
   }
 };
+
+const actualizarPuesto = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { puesto } = req.body;
+    const editarPuesto = await Positions.findOne({ where: { id } });
+    if (!editarPuesto) {
+      res.status(400).send("No existe ningún puesto registrado con ese id")
+    } else {
+      await editarPuesto.update({ puesto });
+      editarPuesto.save();
+      res.status(200).send({ msg: "Puesto actualizado correctamente" });
+    }
+  } catch (error) {
+    next(error);
+  }
+}
 
 const eliminarPuesto = async (req, res, next) => {
   try {
@@ -41,6 +72,8 @@ const eliminarPuesto = async (req, res, next) => {
 
 module.exports = {
   obtenerPuestos,
+  obtenerPuesto,
   crearPuesto,
+  actualizarPuesto,
   eliminarPuesto
 }

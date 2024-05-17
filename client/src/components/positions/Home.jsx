@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { eliminarPuesto, obtenerPuestos } from '../../redux/actions';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -45,12 +46,14 @@ const Home = () => {
               </thead>
               <tbody>
                 {
-                  puestos.map(puesto => (
+                  puestos.sort((a, b) => a.id - b.id).map(puesto => (
                     <tr key={puesto.id}>
                       <td scope="row">{puesto.id}</td>
                       <td>{puesto.puesto}</td>
                       <td>
-                        <input className="btn btn-info" type="button" value="Editar" />
+                        <Link to={`/puesto/editar/${puesto.id}`}>
+                          <input className="btn btn-info" type="button" value="Editar" />
+                        </Link>
                         |
                         <input className="btn btn-danger" type="button" value="Eliminar" onClick={() => handleDelete(puesto.id)} />
                       </td>

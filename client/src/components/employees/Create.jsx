@@ -68,26 +68,26 @@ const Create = () => {
       <div className="card">
         <div className="card-header">Datos del empleado</div>
         <div className="card-body">
-          <form encType="multipart/form-data" onChange={handleChange} onSubmit={handleSubmit}>
+          <form encType="multipart/form-data" onSubmit={handleSubmit}>
             <div className="mb-3">
               <label className="form-label">Primer nombre</label>
-              <input type="text" className="form-control" name="primerNombre" value={state.primerNombre} placeholder="Primer nombre" />
+              <input type="text" className="form-control" name="primerNombre" value={state.primerNombre} placeholder="Primer nombre" onChange={handleChange} />
             </div>
             <div className="mb-3">
               <label className="form-label">Segundo nombre</label>
-              <input type="text" className="form-control" name="segundoNombre" value={state.segundoNombre} placeholder="Segundo nombre" />
+              <input type="text" className="form-control" name="segundoNombre" value={state.segundoNombre} placeholder="Segundo nombre" onChange={handleChange} />
             </div>
             <div className="mb-3">
               <label className="form-label">Primer apellido</label>
-              <input type="text" className="form-control" name="primerApellido" value={state.primerApellido} placeholder="Primer apellido" />
+              <input type="text" className="form-control" name="primerApellido" value={state.primerApellido} placeholder="Primer apellido" onChange={handleChange} />
             </div>
             <div className="mb-3">
               <label className="form-label">Segundo apellido</label>
-              <input type="text" className="form-control" name="segundoApellido" value={state.segundoApellido} placeholder="Segundo apellido" />
+              <input type="text" className="form-control" name="segundoApellido" value={state.segundoApellido} placeholder="Segundo apellido" onChange={handleChange} />
             </div>
             <div className="mb-3">
               <label className="form-label">Edad</label>
-              <input type="text" className="form-control" name="edad" value={state.edad} placeholder="Edad" />
+              <input type="text" className="form-control" name="edad" value={state.edad} placeholder="Edad" onChange={handleChange} />
             </div>
             <div className="mb-3">
               <label className="form-label">Foto:</label>
@@ -95,22 +95,22 @@ const Create = () => {
             </div>
             <div className="mb-3">
               <label className="form-label">CV(PDF):</label>
-              <input type="file" className="form-control" name="curriculumVitae" />
+              <input type="file" className="form-control" name="curriculumVitae" onChange={handleChange} />
             </div>
             <div className="mb-3">
               <label className="form-label">Puesto:</label>
-              <select className="form-select form-select-sm" name="puestoId">
-                <option selected>Seleccione uno</option>
+              <select className="form-select form-select-sm" name="puestoId" value={state.puestoId} onChange={handleChange}>
+                <option hidden>Seleccione uno</option>
                 {
                   puestos.map(puesto => (
-                    <option value={puesto.id}>{puesto.puesto}</option>
+                    <option key={puesto.id} value={puesto.id}>{puesto.puesto}</option>
                   ))
                 }
               </select>
             </div>
             <div className="mb-3">
               <label className="form-label">Fecha de ingreso:</label>
-              <input type="date" className="form-control" name="fechaIngreso" value={state.fechaIngreso} />
+              <input type="date" className="form-control" name="fechaIngreso" value={state.fechaIngreso} onChange={handleChange} />
             </div>
             <button type="submit" className="btn btn-success">Agregar registro</button>
             <a className="btn btn-primary" href="/empleados" role="button">Cancelar</a>

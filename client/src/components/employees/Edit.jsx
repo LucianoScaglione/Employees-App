@@ -123,7 +123,7 @@ const Edit = () => {
                 <option selected>{state.puestoId}</option>
                 {
                   puestos.map(puesto => (
-                    <option value={puesto.id}>{puesto.puesto}</option>
+                    <option key={puesto.id} value={puesto.id}>{puesto.puesto}</option>
                   ))
                 }
               </select>

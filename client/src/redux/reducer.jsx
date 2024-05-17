@@ -1,11 +1,12 @@
-import { OBTENER_EMPLEADOS, OBTENER_EMPLEADO, VACIAR_ESTADO, ELIMINAR_EMPLEADO, OBTENER_USUARIOS, ELIMINAR_USUARIO, OBTENER_PUESTOS, ELIMINAR_PUESTO } from './actions';
+import { OBTENER_EMPLEADOS, OBTENER_EMPLEADO, VACIAR_ESTADO, ELIMINAR_EMPLEADO, OBTENER_USUARIOS, ELIMINAR_USUARIO, OBTENER_PUESTOS, ELIMINAR_PUESTO, OBTENER_PUESTO } from './actions';
 
 const initialState = {
   empleados: [],
   empleadosCopia: [],
   empleado: [],
   usuarios: [],
-  puestos: []
+  puestos: [],
+  puesto: []
 }
 
 const reducer = (state = initialState, { type, payload }) => {
@@ -26,7 +27,8 @@ const reducer = (state = initialState, { type, payload }) => {
     case VACIAR_ESTADO: {
       return {
         ...state,
-        empleado: []
+        empleado: [],
+        puesto: []
       }
     };
     case ELIMINAR_EMPLEADO: {
@@ -55,6 +57,12 @@ const reducer = (state = initialState, { type, payload }) => {
         puestos: payload
       }
     };
+    case OBTENER_PUESTO: {
+      return {
+        ...state,
+        puesto: payload
+      }
+    }
     case ELIMINAR_PUESTO: {
       const eliminarPuesto = state.puestos.filter(puesto => puesto.id !== payload);
       return {
