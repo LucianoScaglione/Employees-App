@@ -57,8 +57,8 @@ const Home = () => {
                     <tr key={empleado.id}>
                       <td>{empleado.id}</td>
                       <td>{empleado.primerNombre} {empleado.segundoNombre && empleado.segundoNombre} {empleado.primerApellido}</td>
-                      <td><img width="100" height="70" src={empleado.foto} className="rounded" alt='' /></td>
-                      <td>""</td>
+                      <td><img width="70" height="50" src={empleado.foto} className="rounded" alt='' /></td>
+                      <td><a type="button" className="btn btn-primary" href="http://localhost:3001/uploads/prueba.pdf" target="_blank">Ver C.V</a></td>
                       <td>{empleado.Position.puesto}</td>
                       <td>{empleado.edad}</td>
                       <td>{empleado.fechaIngreso}</td>

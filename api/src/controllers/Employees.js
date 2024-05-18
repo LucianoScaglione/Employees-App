@@ -56,19 +56,24 @@ const buscarUnEmpleado = async (req, res, next) => {
 const registrarEmpleado = async (req, res, next) => {
   try {
     const { primerNombre, segundoNombre, primerApellido, segundoApellido, edad, foto, curriculumVitae, puestoId, fechaIngreso } = req.body;
-    let decodificarLink = Buffer.from(foto, 'base64');
-    let nombreImagenGuardada = `${Date.now()}.png`;
-    let AlmacenamientoLinkImagen = `uploads/${nombreImagenGuardada}`;
-    let linkImagenARenderizar = `uploads/${nombreImagenGuardada}`;
-    fs.writeFileSync(AlmacenamientoLinkImagen, decodificarLink);
 
+    const crearImagen = (foto) => {
+      let decodificarLink = Buffer.from(foto, 'base64');
+      let nombreImagenGuardada = `${Date.now()}.png`;
+      let AlmacenamientoLinkImagen = `uploads/${nombreImagenGuardada}`;
+      let linkImagenARenderizar = `uploads/${nombreImagenGuardada}`;
+      fs.writeFileSync(AlmacenamientoLinkImagen, decodificarLink);
+      return linkImagenARenderizar;
+    }
+
+    const agregarImagen = foto ? crearImagen(foto) : `uploads/withoutimage.png`
     const crearEmpleado = await Employees.create({
       primerNombre,
       segundoNombre,
       primerApellido,
       segundoApellido,
       edad,
-      foto: `http://localhost:3001/${linkImagenARenderizar}`,
+      foto: `http://localhost:3001/${agregarImagen}`,
       curriculumVitae,
       fechaIngreso,
       PositionId: puestoId

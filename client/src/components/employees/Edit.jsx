@@ -74,8 +74,8 @@ const Edit = () => {
         foto: empleado.foto || '',
         curriculumVitae: empleado.curriculumVitae || '',
         fechaIngreso: empleado.fechaIngreso || '',
-        puestoId: empleado.Position?.PositionId || 0,
-        puesto: empleado.Position?.puesto || ''
+        puestoId: empleado.Position?.PositionId,
+        puesto: empleado.Position?.puesto 
       })
     }
   }, [empleado]);
