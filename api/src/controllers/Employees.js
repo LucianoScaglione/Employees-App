@@ -83,7 +83,7 @@ const registrarEmpleado = async (req, res, next) => {
 const actualizarEmpleado = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { primerNombre, segundoNombre, primerApellido, segundoApellido, edad, nuevaFoto, curriculumVitae, puesto, fechaIngreso } = req.body;
+    const { primerNombre, segundoNombre, primerApellido, segundoApellido, edad, nuevaFoto, curriculumVitae, puestoId, fechaIngreso } = req.body;
 
     const cambiarImagen = (nuevaFoto) => {
       let decodificarLink = Buffer.from(nuevaFoto, 'base64');
@@ -94,7 +94,7 @@ const actualizarEmpleado = async (req, res, next) => {
       return linkImagenARenderizar;
     }
 
-    const buscarEmpleado = await Employees.findOne({ where: { id } });
+    const buscarEmpleado = await Employees.findOne({ where: { id }, include: Positions });
     const agregarImagen = nuevaFoto ? cambiarImagen(nuevaFoto) : buscarEmpleado.foto
     if (buscarEmpleado) {
       await buscarEmpleado.update({
@@ -105,7 +105,7 @@ const actualizarEmpleado = async (req, res, next) => {
         edad: edad,
         foto: nuevaFoto ? `http://localhost:3001/${agregarImagen}` : buscarEmpleado.foto,
         curriculumVitae: curriculumVitae,
-        puesto: puesto,
+        PositionId: puestoId,
         fechaIngreso: fechaIngreso
       });
       buscarEmpleado.save();

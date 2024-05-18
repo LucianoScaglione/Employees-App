@@ -15,9 +15,10 @@ const Edit = () => {
     curriculumVitae: '',
     fechaIngreso: '',
     puestoId: 0,
+    puesto: ''
   });
   const [nuevaFoto, setNuevaFoto] = useState('');
-  const [loading, setLoading] = useState('');
+  const [loading, setLoading] = useState(true);
   const idEmpleado = useParams();
   const dispatch = useDispatch();
   const empleado = useSelector(state => state.empleado);
@@ -55,7 +56,7 @@ const Edit = () => {
   }
 
   useEffect(() => {
-    !empleado.length && dispatch(obtenerEmpleado(idEmpleado.id)).then(setLoading(true));
+    !empleado.length && dispatch(obtenerEmpleado(idEmpleado.id)).then(setLoading(false));
     dispatch(obtenerPuestos())
     return () => {
       dispatch(vaciarEstado());
@@ -65,19 +66,20 @@ const Edit = () => {
   useEffect(() => {
     if (empleado) {
       setState({
-        primerNombre: empleado.primerNombre,
-        segundoNombre: empleado.segundoNombre,
-        primerApellido: empleado.primerApellido,
-        segundoApellido: empleado.segundoApellido,
-        edad: empleado.edad,
-        foto: empleado.foto,
-        curriculumVitae: empleado.curriculumVitae,
-        fechaIngreso: empleado.fechaIngreso,
-        puestoId: empleado.Position?.puesto
+        primerNombre: empleado.primerNombre || '',
+        segundoNombre: empleado.segundoNombre || '',
+        primerApellido: empleado.primerApellido || '',
+        segundoApellido: empleado.segundoApellido || '',
+        edad: empleado.edad || '',
+        foto: empleado.foto || '',
+        curriculumVitae: empleado.curriculumVitae || '',
+        fechaIngreso: empleado.fechaIngreso || '',
+        puestoId: empleado.Position?.PositionId || 0,
+        puesto: empleado.Position?.puesto || ''
       })
     }
   }, [empleado]);
-  if (!loading) {
+  if (loading) {
     return <h1>Cargando...</h1>
   }
   return (
@@ -86,26 +88,26 @@ const Edit = () => {
       <div className="card">
         <div className="card-header">Datos del empleado</div>
         <div className="card-body">
-          <form encType="multipart/form-data" onChange={handleChange}>
+          <form encType="multipart/form-data" onSubmit={handleSubmit}>
             <div className="mb-3">
               <label className="form-label">Primer nombre</label>
-              <input type="text" className="form-control" name="primerNombre" value={state.primerNombre} placeholder="Primer nombre" />
+              <input type="text" className="form-control" name="primerNombre" value={state.primerNombre} placeholder="Primer nombre" onChange={handleChange} />
             </div>
             <div className="mb-3">
               <label className="form-label">Segundo nombre</label>
-              <input type="text" className="form-control" name="segundoNombre" value={state.segundoNombre} placeholder="Segundo nombre" />
+              <input type="text" className="form-control" name="segundoNombre" value={state.segundoNombre} placeholder="Segundo nombre" onChange={handleChange} />
             </div>
             <div className="mb-3">
               <label className="form-label">Primer apellido</label>
-              <input type="text" className="form-control" name="primerApellido" value={state.primerApellido} placeholder="Primer apellido" />
+              <input type="text" className="form-control" name="primerApellido" value={state.primerApellido} placeholder="Primer apellido" onChange={handleChange} />
             </div>
             <div className="mb-3">
               <label className="form-label">Segundo apellido</label>
-              <input type="text" className="form-control" name="segundoApellido" value={state.segundoApellido} placeholder="Segundo apellido" />
+              <input type="text" className="form-control" name="segundoApellido" value={state.segundoApellido} placeholder="Segundo apellido" onChange={handleChange} />
             </div>
             <div className="mb-3">
               <label className="form-label">Edad</label>
-              <input type="text" className="form-control" name="edad" value={state.edad} placeholder="Edad" />
+              <input type="text" className="form-control" name="edad" value={state.edad} placeholder="Edad" onChange={handleChange} />
             </div>
             <div className="mb-3">
               <label className="form-label">Foto:</label> <br />
@@ -118,22 +120,20 @@ const Edit = () => {
             </div>
             <div className="mb-3">
               <label className="form-label">Puesto:</label>
-              ///// revisar esto
-              <select className="form-select form-select-sm" name="puestoId">
-                <option selected>{state.puestoId}</option>
+              <select className="form-select form-select-sm" name="puestoId" value={state.puestoId} onChange={handleChange}>
+                <option hidden>{state.puesto}</option>
                 {
                   puestos.map(puesto => (
                     <option key={puesto.id} value={puesto.id}>{puesto.puesto}</option>
                   ))
                 }
               </select>
-              /////
             </div>
             <div className="mb-3">
               <label className="form-label">Fecha de ingreso:</label>
-              <input type="date" className="form-control" name="fechaIngreso" value={state.fechaIngreso} />
+              <input type="date" className="form-control" name="fechaIngreso" value={state.fechaIngreso} onChange={handleChange} />
             </div>
-            <button type="submit" className="btn btn-success" onClick={(e) => handleSubmit(e)}>Actualizar registro</button>
+            <button type="submit" className="btn btn-success">Actualizar registro</button>
             <a className="btn btn-primary" href="/empleados" role="button">Cancelar</a>
           </form>
         </div>
