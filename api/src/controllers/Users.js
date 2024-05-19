@@ -10,6 +10,16 @@ const obtenerUsuarios = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+const obtenerUsuario = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const buscarUsuario = await Users.findOne({ where: { id } });
+    buscarUsuario ? res.status(200).send(buscarUsuario) : res.status(400).send("No existe usuario registrado con ese id");
+  } catch (error) {
+    next(error);
+  }
 }
 
 const registrarUsuario = async (req, res, next) => {
@@ -37,7 +47,7 @@ const registrarUsuario = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
 
 const loguearUsuario = async (req, res, next) => {
   try {
@@ -58,6 +68,28 @@ const loguearUsuario = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+const editarUsuario = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { nombreUsuario, contraseña, correo } = req.body;
+    const buscarUsuario = await Users.findOne({ where: { id } });
+    if (buscarUsuario) {
+      await buscarUsuario.update({
+        nombreUsuario,
+        /* Crear hash contraseña*/
+        contraseña,
+        correo
+      })
+      buscarUsuario.save();
+      res.status(200).send("Usuario actualizado correctamente");
+    } else {
+      res.status(400).send("No existe usuario registado con ese id");
+    }
+  } catch (error) {
+    next(error);
+  }
 }
 
 const eliminarUsuario = async (req, res, next) => {
@@ -74,13 +106,14 @@ const eliminarUsuario = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-
-}
+};
 
 
 module.exports = {
   obtenerUsuarios,
+  obtenerUsuario,
   registrarUsuario,
   loguearUsuario,
+  editarUsuario,
   eliminarUsuario
 };

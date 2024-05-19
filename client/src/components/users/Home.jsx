@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { eliminarUsuario, obtenerUsuarios } from "../../redux/actions";
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -55,7 +56,9 @@ const Home = () => {
                       <td>********</td>
                       <td>{usuario.correo}</td>
                       <td>
-                        <input className="btn btn-info" type="button" value="Editar" />
+                        <Link to={`/usuario/editar/${usuario.id}`}>
+                          <input className="btn btn-info" type="button" value="Editar" />
+                        </Link>
                         |
                         <input className="btn btn-danger" type="button" value="Eliminar" onClick={(e) => handleDelete(e, usuario.id)} />
                       </td>

@@ -7,6 +7,7 @@ export const OBTENER_EMPLEADO = "OBTENER_EMPLEADO";
 export const VACIAR_ESTADO = "VACIAR_ESTADO";
 export const ELIMINAR_EMPLEADO = "ELIMINAR_EMPLEADO";
 export const OBTENER_USUARIOS = "OBTENER_USUARIOS";
+export const OBTENER_USUARIO = "OBTENER_USUARIO";
 export const ELIMINAR_USUARIO = "ELIMINAR_USUARIO";
 export const OBTENER_PUESTOS = "OBTENER_PUESTOS";
 export const OBTENER_PUESTO = "OBTENER_PUESTO";
@@ -89,6 +90,17 @@ export const obtenerUsuarios = () => {
   }
 };
 
+export const obtenerUsuario = (id) => {
+  return (dispatch) => {
+    return axios.get(`${backend}/users/${id}`)
+      .then(res => dispatch({ type: OBTENER_USUARIO, payload: res.data }))
+      .catch(err => Swal.fire({
+        icon: "error",
+        title: err.response.data,
+      }))
+  }
+};
+
 export const crearUsuario = (body) => {
   return () => {
     return axios.post(`${backend}/users/register`, body)
@@ -131,6 +143,23 @@ export const informacionUsuario = () => {
     return {};
   }
 }
+
+export const editarUsuario = (id, body) => {
+  return () => {
+    return axios.put(`${backend}/users/${id}`, body)
+      .then(res => Swal.fire({
+        title: "¡Buen trabajo!",
+        text: "Usuario actualizado correctamente",
+        icon: "success"
+      }))
+      .catch(err => {
+        Swal.fire({
+          icon: "error",
+          title: err.response.data,
+        });
+      })
+  }
+};
 
 export const eliminarUsuario = (id) => {
   return (dispatch) => {

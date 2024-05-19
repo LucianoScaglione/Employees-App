@@ -13,6 +13,7 @@ import CreatePosition from './components/positions/Create';
 import EditPosition from './components/positions/Edit';
 import HomeUsers from './components/users/Home';
 import CreateUser from './components/users/Create';
+import EditUser from './components/users/Edit';
 
 function App() {
   const Layout = ({ children }) => (
@@ -37,6 +38,7 @@ function App() {
               <PrivateRoute exact path="/puesto/editar/:id" component={EditPosition} />
               <PrivateRoute exact path="/usuarios" component={HomeUsers} />
               <PrivateRoute exact path="/usuarios/registrar" component={CreateUser} />
+              <PrivateRoute exact path="/usuario/editar/:id" component={EditUser} />
             </Switch>
           </Layout>
         </Route>
