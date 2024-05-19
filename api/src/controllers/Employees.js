@@ -56,17 +56,26 @@ const buscarUnEmpleado = async (req, res, next) => {
 const registrarEmpleado = async (req, res, next) => {
   try {
     const { primerNombre, segundoNombre, primerApellido, segundoApellido, edad, foto, curriculumVitae, puestoId, fechaIngreso } = req.body;
-
     const crearImagen = (foto) => {
       let decodificarLink = Buffer.from(foto, 'base64');
       let nombreImagenGuardada = `${Date.now()}.png`;
-      let AlmacenamientoLinkImagen = `uploads/${nombreImagenGuardada}`;
+      let almacenamientoLinkImagen = `uploads/${nombreImagenGuardada}`;
       let linkImagenARenderizar = `uploads/${nombreImagenGuardada}`;
-      fs.writeFileSync(AlmacenamientoLinkImagen, decodificarLink);
+      fs.writeFileSync(almacenamientoLinkImagen, decodificarLink);
       return linkImagenARenderizar;
     }
 
+    const crearCV = (curriculumVitae) => {
+      let decodificarLink = Buffer.from(curriculumVitae, 'base64');
+      let nombreCVGuardado = `${primerNombre + primerApellido}.pdf`
+      let almacenamientoLinkCV = `uploads/${nombreCVGuardado}`;
+      let linkCVARenderizar = `uploads/${nombreCVGuardado}`;
+      fs.writeFileSync(almacenamientoLinkCV, decodificarLink);
+      return linkCVARenderizar;
+    }
+
     const agregarImagen = foto ? crearImagen(foto) : `uploads/withoutimage.png`
+    const agregarCV = curriculumVitae ? crearCV(curriculumVitae) : '';
     const crearEmpleado = await Employees.create({
       primerNombre,
       segundoNombre,
@@ -74,7 +83,7 @@ const registrarEmpleado = async (req, res, next) => {
       segundoApellido,
       edad,
       foto: `http://localhost:3001/${agregarImagen}`,
-      curriculumVitae,
+      curriculumVitae: curriculumVitae ? `http://localhost:3001/${agregarCV}` : '',
       fechaIngreso,
       PositionId: puestoId
     });

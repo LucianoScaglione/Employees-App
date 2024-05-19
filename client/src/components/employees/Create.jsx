@@ -10,12 +10,11 @@ const Create = () => {
     primerApellido: '',
     segundoApellido: '',
     edad: '',
-    curriculumVitae: '',
     fechaIngreso: '',
     puestoId: 0
   });
   const [foto, setFoto] = useState('');
-
+  const [curriculumVitae, setCurriculumVitae] = useState('');
   const puestos = useSelector(state => state.puestos);
   const dispatch = useDispatch();
   const history = useHistory();
@@ -27,23 +26,38 @@ const Create = () => {
     })
   };
 
-  const convertirBase64 = (imagen) => {
-    Array.from(imagen).forEach(archivo => {
-      const reader = new FileReader();
-      reader.readAsDataURL(archivo);
-      reader.onload = () => {
-        const base64 = reader.result.split(',')[1];
-        setFoto(base64);
-      };
-      reader.onerror = (error) => {
-        console.log('Error al leer el archivo:', error);
-      };
-    });
+  const convertirBase64 = (imagen, cv) => {
+    if (imagen) {
+      Array.from(imagen).forEach(archivo => {
+        const reader = new FileReader();
+        reader.readAsDataURL(archivo);
+        reader.onload = () => {
+          const base64 = reader.result.split(',')[1];
+          setFoto(base64);
+        };
+        reader.onerror = (error) => {
+          console.log('Error al leer el archivo:', error);
+        };
+      });
+    };
+    if (cv) {
+      Array.from(cv).forEach(archivo => {
+        const reader = new FileReader();
+        reader.readAsDataURL(archivo);
+        reader.onload = () => {
+          const base64 = reader.result.split(',')[1];
+          setCurriculumVitae(base64);
+        };
+        reader.onerror = (error) => {
+          console.log('Error al leer el archivo:', error);
+        };
+      });
+    };
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const datosEmpleado = { ...state, foto };
+    const datosEmpleado = { ...state, foto, curriculumVitae };
     dispatch(crearEmpleado(datosEmpleado));
     setState({
       primerNombre: '',
@@ -51,11 +65,11 @@ const Create = () => {
       primerApellido: '',
       segundoApellido: '',
       edad: '',
-      curriculumVitae: '',
       fechaIngreso: '',
       puestoId: 0
     });
     setFoto('');
+    setCurriculumVitae('');
     history.push("/empleados");
   };
 
@@ -95,7 +109,7 @@ const Create = () => {
             </div>
             <div className="mb-3">
               <label className="form-label">CV(PDF):</label>
-              <input type="file" className="form-control" name="curriculumVitae" onChange={handleChange} />
+              <input type="file" accept="application/pdf" className="form-control" name="curriculumVitae" defaultValue={curriculumVitae} onChange={e => convertirBase64(foto, e.target.files)} />
             </div>
             <div className="mb-3">
               <label className="form-label">Puesto:</label>

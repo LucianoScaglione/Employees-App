@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { obtenerEmpleados, eliminarEmpleado } from "../../redux/actions";
 import { Link } from "react-router-dom";
@@ -7,6 +7,7 @@ import swal from 'sweetalert';
 const Home = () => {
   const dispatch = useDispatch();
   const empleados = useSelector(state => state.empleados);
+  const [loading, setLoading] = useState(true);
 
   const handleDelete = (id) => {
     swal({
@@ -28,8 +29,17 @@ const Home = () => {
       });
   }
   useEffect(() => {
-    !empleados.length && dispatch(obtenerEmpleados())
-  }, [empleados]);
+    !empleados.length && dispatch(obtenerEmpleados()).then(setLoading(false));
+  }, [dispatch]);
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center">
+        <div className="spinner-grow text-primary m-5" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    )
+  }
   return (
     <div>
       <div className="card">
@@ -53,23 +63,28 @@ const Home = () => {
               </thead>
               <tbody>
                 {
-                  empleados.sort((a, b) => a.id - b.id).map(empleado => (
-                    <tr key={empleado.id}>
-                      <td>{empleado.id}</td>
-                      <td>{empleado.primerNombre} {empleado.segundoNombre && empleado.segundoNombre} {empleado.primerApellido}</td>
-                      <td><img width="70" height="50" src={empleado.foto} className="rounded" alt='' /></td>
-                      <td><a type="button" className="btn btn-primary" href="http://localhost:3001/uploads/prueba.pdf" target="_blank">Ver C.V</a></td>
-                      <td>{empleado.Position.puesto}</td>
-                      <td>{empleado.edad}</td>
-                      <td>{empleado.fechaIngreso}</td>
-                      <td>
-                        <Link to={`/empleado/${empleado.id}`}>
-                          <button className="btn btn-info">Editar</button>
-                        </Link>
-                        |<a className="btn btn-danger" role="button" onClick={() => handleDelete(empleado.id)}>Eliminar</a>
-                      </td>
-                    </tr>
-                  ))
+                  empleados.sort((a, b) => a.id - b.id).map(empleado => {
+                    const separarURL = empleado.curriculumVitae.split("/");
+                    const nombreCV = separarURL[separarURL.length - 1];
+                    return (
+                      <tr key={empleado.id}>
+                        <td>{empleado.id}</td>
+                        <td>{empleado.primerNombre} {empleado.segundoNombre && empleado.segundoNombre} {empleado.primerApellido}</td>
+                        <td><img width="70" height="50" src={empleado.foto} className="rounded" alt='' /></td>
+                        <td>{empleado.curriculumVitae ? <strong><a className="text-decoration-none text-red-500" href={empleado.curriculumVitae} target="_blank">{nombreCV}</a></strong> : <p className="fs-1.2">Sin C.V</p>}</td>
+                        <td>{empleado.Position.puesto}</td>
+                        <td>{empleado.edad}</td>
+                        <td>{empleado.fechaIngreso}</td>
+                        <td>
+                          <Link to={`/empleado/${empleado.id}`}>
+                            <button className="btn btn-info">Editar</button>
+                          </Link>
+                          |<a className="btn btn-danger" role="button" onClick={() => handleDelete(empleado.id)}>Eliminar</a>
+                        </td>
+                      </tr>
+
+                    )
+                  })
                 }
               </tbody>
             </table>

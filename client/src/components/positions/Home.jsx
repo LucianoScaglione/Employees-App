@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { eliminarPuesto, obtenerPuestos } from '../../redux/actions';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const puestos = useSelector(state => state.puestos)
 
@@ -25,8 +26,18 @@ const Home = () => {
   }
 
   useEffect(() => {
-    dispatch(obtenerPuestos());
+    dispatch(obtenerPuestos()).then(setLoading(false));
   }, [dispatch]);
+
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center">
+        <div className="spinner-grow text-primary m-5" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    )
+  }
   return (
     <div>
       <div className="card">

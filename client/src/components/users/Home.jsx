@@ -1,9 +1,10 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { eliminarUsuario, informacionUsuario, obtenerUsuarios } from "../../redux/actions";
 import { Link } from 'react-router-dom';
 
 const Home = () => {
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const usuarios = useSelector(state => state.usuarios);
   const usuarioLogueado = informacionUsuario();
@@ -28,8 +29,18 @@ const Home = () => {
       });
   }
   useEffect(() => {
-    !usuarios.length && dispatch(obtenerUsuarios())
+    !usuarios.length && dispatch(obtenerUsuarios()).then(setLoading(false));
   }, [dispatch]);
+
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center">
+        <div className="spinner-grow text-primary m-5" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    )
+  }
   return (
     <div>
       <div className="card">
@@ -50,7 +61,7 @@ const Home = () => {
               </thead>
               <tbody>
                 {
-                  usuarios.map(usuario => (
+                  usuarios.sort((a, b) => a.id - b.id).map(usuario => (
                     <tr key={usuario.id}>
                       <td scope="row">{usuario.id}</td>
                       <td>{usuario.nombreUsuario}</td>

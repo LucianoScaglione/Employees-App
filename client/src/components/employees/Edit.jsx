@@ -75,12 +75,18 @@ const Edit = () => {
         curriculumVitae: empleado.curriculumVitae || '',
         fechaIngreso: empleado.fechaIngreso || '',
         puestoId: empleado.Position?.PositionId,
-        puesto: empleado.Position?.puesto 
+        puesto: empleado.Position?.puesto
       })
     }
   }, [empleado]);
   if (loading) {
-    return <h1>Cargando...</h1>
+    return (
+      <div className="text-center m-5">
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    )
   }
   return (
     <div>
