@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { eliminarUsuario, obtenerUsuarios } from "../../redux/actions";
+import { eliminarUsuario, informacionUsuario, obtenerUsuarios } from "../../redux/actions";
 import { Link } from 'react-router-dom';
 
 const Home = () => {
   const dispatch = useDispatch();
   const usuarios = useSelector(state => state.usuarios);
+  const usuarioLogueado = informacionUsuario();
   const handleDelete = (e, id) => {
     e.preventDefault();
     swal({
@@ -55,13 +56,16 @@ const Home = () => {
                       <td>{usuario.nombreUsuario}</td>
                       <td>********</td>
                       <td>{usuario.correo}</td>
-                      <td>
-                        <Link to={`/usuario/editar/${usuario.id}`}>
-                          <input className="btn btn-info" type="button" value="Editar" />
-                        </Link>
-                        |
-                        <input className="btn btn-danger" type="button" value="Eliminar" onClick={(e) => handleDelete(e, usuario.id)} />
-                      </td>
+                      {
+                        usuarioLogueado.usuario.id === usuario.id || usuarioLogueado.usuario.id === 1 ?
+                          <td>
+                            <Link to={`/usuario/editar/${usuario.id}`}>
+                              <input className="btn btn-info" type="button" value="Editar" />
+                            </Link>
+                            |
+                            <input className="btn btn-danger" type="button" value="Eliminar" onClick={(e) => handleDelete(e, usuario.id)} />
+                          </td> : <td></td>
+                      }
                     </tr>
                   ))
                 }

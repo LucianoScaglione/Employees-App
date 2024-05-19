@@ -76,10 +76,10 @@ const editarUsuario = async (req, res, next) => {
     const { nombreUsuario, contraseña, correo } = req.body;
     const buscarUsuario = await Users.findOne({ where: { id } });
     if (buscarUsuario) {
+      const hashContraseña = contraseña ? await bcrypt.hash(contraseña, 10) : buscarUsuario.contraseña;
       await buscarUsuario.update({
         nombreUsuario,
-        /* Crear hash contraseña*/
-        contraseña,
+        contraseña: hashContraseña,
         correo
       })
       buscarUsuario.save();
@@ -90,7 +90,7 @@ const editarUsuario = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
 
 const eliminarUsuario = async (req, res, next) => {
   try {
