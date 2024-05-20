@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { obtenerEmpleados, eliminarEmpleado, obtenerEmpleadosQuery } from "../../redux/actions";
 import { Link } from "react-router-dom";
 import swal from 'sweetalert';
+import Pagination from "../../Pagination";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -10,10 +11,20 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [empleado, setEmpleado] = useState('');
 
+  const [paginaActual, setPaginaActual] = useState(1);
+  const empleadosPorPagina = 5;
+  const indiceUltimoEmpleado = paginaActual * empleadosPorPagina;
+  const indicePrimerEmpleado = indiceUltimoEmpleado - empleadosPorPagina;
+  const paginadoEmpleados = empleados.sort((a, b) => a.id - b.id).slice(indicePrimerEmpleado, indiceUltimoEmpleado);
+  const indiceFinalReal = Math.min(indiceUltimoEmpleado, empleados.length);
+  const cambiarPaginaActual = (pagina) => {
+    setPaginaActual(pagina);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(obtenerEmpleadosQuery(empleado));
-  }
+  };
 
   const handleChange = (e) => {
     setEmpleado(e.target.value);
@@ -38,7 +49,7 @@ const Home = () => {
           swal("Cancelaste la eliminación");
         };
       });
-  }
+  };
   useEffect(() => {
     !empleados.length && dispatch(obtenerEmpleados()).then(setLoading(false));
   }, [dispatch]);
@@ -50,7 +61,7 @@ const Home = () => {
         </div>
       </div>
     )
-  }
+  };
   return (
     <div>
       <div className="card">
@@ -78,7 +89,7 @@ const Home = () => {
               </thead>
               <tbody>
                 {
-                  empleados.sort((a, b) => a.id - b.id).map(empleado => {
+                  paginadoEmpleados.map(empleado => {
                     const separarURL = empleado.curriculumVitae.split("/");
                     const nombreCV = separarURL[separarURL.length - 1];
                     return (
@@ -97,16 +108,27 @@ const Home = () => {
                           |<a className="btn btn-danger" role="button" onClick={() => handleDelete(empleado.id)}>Eliminar</a>
                         </td>
                       </tr>
-
                     )
                   })
                 }
               </tbody>
             </table>
+            {
+              empleados.length > 0 &&
+              <div className="d-flex justify-content-between align-items-center">
+                <p>Mostrando {indicePrimerEmpleado + 1} a {indiceFinalReal} de {empleados.length} registros</p>
+                <Pagination
+                  empleados={empleados.length}
+                  empleadosPorPagina={empleadosPorPagina}
+                  paginaActual={paginaActual}
+                  cambiarPaginaActual={cambiarPaginaActual} />
+              </div>
+            }
           </div>
         </div>
       </div>
-    </div>
+      <br />
+    </div >
   )
 }
 
