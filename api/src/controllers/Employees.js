@@ -9,31 +9,23 @@ const ejecutarBaseDatos = async () => {
 
 const obtenerEmpleados = async (req, res, next) => {
   try {
-    const { primerNombre, primerApellido } = req.query;
+    const { empleado } = req.query;
     const obtenerInformacion = await ejecutarBaseDatos();
 
     if (!obtenerInformacion.length) {
       res.status(400).send("La base de datos está vacía");
     }
 
-    if (primerNombre) {
-      const buscarEmpleadoNombre = await Employees.findAll({
-        where: {
-          primerNombre: {
-            [Op.iLike]: `%${primerNombre}%`
-          }
-        }
-      });
-      buscarEmpleadoNombre.length ? res.status(200).send(buscarEmpleadoNombre) : res.status(404).send("No existe ningún empleado con ese nombre");
-    } else if (primerApellido) {
+    if (empleado) {
       const buscarEmpleadoApellido = await Employees.findAll({
         where: {
-          primerApellido: {
-            [Op.iLike]: `%${primerApellido}%`
-          }
+          [Op.or]: [
+            { primerNombre: { [Op.iLike]: `%${empleado}%` } },
+            { primerApellido: { [Op.iLike]: `%${empleado}%` } }
+          ]
         }
       });
-      buscarEmpleadoApellido.length ? res.status(200).send(buscarEmpleadoApellido) : res.status(404).send("No existe ningún empleado con ese apellido");
+      buscarEmpleadoApellido.length ? res.status(200).send(buscarEmpleadoApellido) : res.status(404).send("No existe ningún empleado registrado con ese nombre");
     }
     else {
       res.status(200).send(obtenerInformacion);
@@ -44,12 +36,16 @@ const obtenerEmpleados = async (req, res, next) => {
 }
 
 const buscarUnEmpleado = async (req, res, next) => {
-  const { id } = req.params;
-  const buscarEmpleado = await Employees.findOne({ where: { id }, include: Positions });
-  if (buscarEmpleado) {
-    res.status(200).send(buscarEmpleado);
-  } else {
-    res.status(400).send("No existe empleado registrado con ese id");
+  try {
+    const { id } = req.params;
+    const buscarEmpleado = await Employees.findOne({ where: { id }, include: Positions });
+    if (buscarEmpleado) {
+      res.status(200).send(buscarEmpleado);
+    } else {
+      res.status(400).send("No existe empleado registrado con ese id");
+    }
+  } catch (error) {
+    next(error);
   }
 }
 
@@ -151,7 +147,7 @@ const eliminarEmpleado = async (req, res, next) => {
     if (!buscarEmpleado) {
       res.status(404).send("No existe ningún empleado registrado con ese id");
     } else {
-      const eliminar = await Employees.destroy({ where: { id } });
+      await Employees.destroy({ where: { id } });
       res.status(200).json({ destroy: true, msg: "El empleado fue eliminado de la base de datos" })
     }
   } catch (error) {
