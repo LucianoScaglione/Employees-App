@@ -97,8 +97,7 @@ const registrarEmpleado = async (req, res, next) => {
 const actualizarEmpleado = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { primerNombre, segundoNombre, primerApellido, segundoApellido, edad, nuevaFoto, curriculumVitae, puestoId, fechaIngreso } = req.body;
-
+    const { primerNombre, segundoNombre, primerApellido, segundoApellido, edad, nuevaFoto, nuevoCurriculum, puestoId, fechaIngreso } = req.body;
     const cambiarImagen = (nuevaFoto) => {
       let decodificarLink = Buffer.from(nuevaFoto, 'base64');
       let nombreImagenGuardada = `${Date.now()}.png`;
@@ -107,9 +106,22 @@ const actualizarEmpleado = async (req, res, next) => {
       fs.writeFileSync(AlmacenamientoLinkImagen, decodificarLink);
       return linkImagenARenderizar;
     }
-
+    const cambiarCV = (nuevoCurriculum) => {
+      let decodificarLink = Buffer.from(nuevoCurriculum, 'base64');
+      let nombreCVGuardado = `${primerNombre + primerApellido}.pdf`
+      let almacenamientoLinkCV = `uploads/${nombreCVGuardado}`;
+      let linkCVARenderizar = `uploads/${nombreCVGuardado}`;
+      fs.writeFileSync(almacenamientoLinkCV, decodificarLink);
+      return linkCVARenderizar;
+    }
     const buscarEmpleado = await Employees.findOne({ where: { id }, include: Positions });
-    const agregarImagen = nuevaFoto ? cambiarImagen(nuevaFoto) : buscarEmpleado.foto
+    if (nuevaFoto) {
+      const url = new URL(buscarEmpleado.foto);
+      const relativePath = url.pathname.substring(1);
+      fs.unlinkSync(relativePath)
+    }
+    const editarImagen = nuevaFoto ? cambiarImagen(nuevaFoto) : buscarEmpleado.foto
+    const editarCurriculum = nuevoCurriculum ? cambiarCV(nuevoCurriculum) : buscarEmpleado.curriculumVitae
     if (buscarEmpleado) {
       await buscarEmpleado.update({
         primerNombre: primerNombre,
@@ -117,8 +129,8 @@ const actualizarEmpleado = async (req, res, next) => {
         primerApellido: primerApellido,
         segundoApellido: segundoApellido,
         edad: edad,
-        foto: nuevaFoto ? `http://localhost:3001/${agregarImagen}` : buscarEmpleado.foto,
-        curriculumVitae: curriculumVitae,
+        foto: nuevaFoto ? `http://localhost:3001/${editarImagen}` : buscarEmpleado.foto,
+        curriculumVitae: nuevoCurriculum ? `http://localhost:3001/${editarCurriculum}` : buscarEmpleado.curriculumVitae,
         PositionId: puestoId,
         fechaIngreso: fechaIngreso
       });
