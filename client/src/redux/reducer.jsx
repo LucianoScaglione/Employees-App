@@ -1,4 +1,4 @@
-import { OBTENER_EMPLEADOS, OBTENER_EMPLEADO, VACIAR_ESTADO, ELIMINAR_EMPLEADO, OBTENER_USUARIOS, OBTENER_USUARIO, ELIMINAR_USUARIO, OBTENER_PUESTOS, ELIMINAR_PUESTO, OBTENER_PUESTO } from './actions';
+import { OBTENER_EMPLEADOS, OBTENER_EMPLEADO, VACIAR_ESTADO, ELIMINAR_EMPLEADO, OBTENER_USUARIOS, OBTENER_USUARIO, ELIMINAR_USUARIO, OBTENER_PUESTOS, ELIMINAR_PUESTO, OBTENER_PUESTO, OBTENER_EMPLEADOS_QUERY } from './actions';
 
 const initialState = {
   empleados: [],
@@ -23,6 +23,15 @@ const reducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         empleado: payload
+      }
+    };
+    case OBTENER_EMPLEADOS_QUERY: {
+      const primerNombre = payload.map(e => e.primerNombre)
+      const primerApellido = payload.map(e => e.primerApellido)
+      const filtrarEmpleados = state.empleadosCopia.filter(empleado => primerNombre.includes(empleado.primerNombre) || primerApellido.includes(empleado.primerApellido));
+      return {
+        ...state,
+        empleados: filtrarEmpleados
       }
     };
     case VACIAR_ESTADO: {

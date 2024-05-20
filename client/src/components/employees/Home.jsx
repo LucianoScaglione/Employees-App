@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { obtenerEmpleados, eliminarEmpleado } from "../../redux/actions";
+import { obtenerEmpleados, eliminarEmpleado, obtenerEmpleadosQuery } from "../../redux/actions";
 import { Link } from "react-router-dom";
 import swal from 'sweetalert';
 
@@ -8,6 +8,17 @@ const Home = () => {
   const dispatch = useDispatch();
   const empleados = useSelector(state => state.empleados);
   const [loading, setLoading] = useState(true);
+  const [empleado, setEmpleado] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(obtenerEmpleadosQuery(empleado));
+  }
+
+  const handleChange = (e) => {
+    setEmpleado(e.target.value);
+    dispatch(obtenerEmpleadosQuery(e.target.value));
+  };
 
   const handleDelete = (id) => {
     swal({
@@ -43,8 +54,12 @@ const Home = () => {
   return (
     <div>
       <div className="card">
-        <div className="card-header">
-          <a className="btn btn-primary" href='/empleados/registrar' role="button">Agregar registro</a>
+        <div className="card-header d-flex justify-content-between align-items-center">
+          <a className="btn btn-primary" href="/empleados/registrar" role="button">Agregar registro</a>
+          <form className="d-flex" onSubmit={handleSubmit}>
+            <input className="form-control me-2" type="search" placeholder="Nombre o apellido" onChange={handleChange} />
+            <button className="btn btn-outline-success" type="submit">Buscar</button>
+          </form>
         </div>
         <div className="card-body">
           <div className="table.responsive-sm">

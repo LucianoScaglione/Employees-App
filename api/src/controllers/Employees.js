@@ -17,7 +17,7 @@ const obtenerEmpleados = async (req, res, next) => {
     }
 
     if (empleado) {
-      const buscarEmpleadoApellido = await Employees.findAll({
+      const buscarEmpleado = await Employees.findAll({
         where: {
           [Op.or]: [
             { primerNombre: { [Op.iLike]: `%${empleado}%` } },
@@ -25,7 +25,7 @@ const obtenerEmpleados = async (req, res, next) => {
           ]
         }
       });
-      buscarEmpleadoApellido.length ? res.status(200).send(buscarEmpleadoApellido) : res.status(404).send("No existe ningún empleado registrado con ese nombre");
+      buscarEmpleado.length ? res.status(200).send(buscarEmpleado) : res.status(404).send("No existe ningún empleado registrado con ese nombre");
     }
     else {
       res.status(200).send(obtenerInformacion);

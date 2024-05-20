@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 const backend = 'http://localhost:3001';
 export const OBTENER_EMPLEADOS = "OBTENER_EMPLEADOS";
 export const OBTENER_EMPLEADO = "OBTENER_EMPLEADO";
+export const OBTENER_EMPLEADOS_QUERY = "OBTENER_EMPLEADOS_QUERY";
 export const VACIAR_ESTADO = "VACIAR_ESTADO";
 export const ELIMINAR_EMPLEADO = "ELIMINAR_EMPLEADO";
 export const OBTENER_USUARIOS = "OBTENER_USUARIOS";
@@ -26,6 +27,19 @@ export const obtenerEmpleado = (id) => {
     return axios.get(`${backend}/employees/${id}`)
       .then(res => dispatch({ type: OBTENER_EMPLEADO, payload: res.data }))
       .catch(err => console.log(err))
+  }
+};
+
+export const obtenerEmpleadosQuery = (body) => {
+  return (dispatch) => {
+    return axios.get(`${backend}/employees?empleado=${body}`)
+      .then(res => dispatch({ type: OBTENER_EMPLEADOS_QUERY, payload: res.data }))
+      .catch(err => {
+        Swal.fire({
+          icon: "error",
+          title: err.response.data,
+        });
+      })
   }
 };
 
