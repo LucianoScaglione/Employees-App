@@ -28,7 +28,7 @@ const Create = () => {
         </div>
         <div className="card-footer text-muted"></div>
       </div>
-
+      <br />
     </div>
   )
 }

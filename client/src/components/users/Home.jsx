@@ -1,13 +1,29 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { eliminarUsuario, informacionUsuario, obtenerUsuarios } from "../../redux/actions";
+import { eliminarUsuario, informacionUsuario, obtenerUsuarios, obtenerUsuariosQuery } from "../../redux/actions";
 import { Link } from 'react-router-dom';
+import Pagination from "../../Pagination";
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
+  const [buscarUsuario, setBuscarUsuario] = useState('');
   const dispatch = useDispatch();
   const usuarios = useSelector(state => state.usuarios);
   const usuarioLogueado = informacionUsuario();
+  const [paginaActual, setPaginaActual] = useState(1);
+  const usuariosPorPagina = 5;
+  const indiceUltimoUsuario = paginaActual * usuariosPorPagina;
+  const indicePrimerUsuario = indiceUltimoUsuario - usuariosPorPagina;
+  const paginadoUsuarios = usuarios.sort((a, b) => a.id - b.id).slice(indicePrimerUsuario, indiceUltimoUsuario);
+  const indiceFinalReal = Math.min(indiceUltimoUsuario, usuarios.length)
+  const cambiarPaginaActual = (pagina) => {
+    setPaginaActual(pagina);
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(obtenerUsuariosQuery(buscarUsuario));
+    setPaginaActual(1);
+  }
   const handleDelete = (e, id) => {
     e.preventDefault();
     swal({
@@ -29,8 +45,13 @@ const Home = () => {
       });
   }
   useEffect(() => {
-    !usuarios.length && dispatch(obtenerUsuarios()).then(setLoading(false));
-  }, [dispatch]);
+    if (!usuarios.length) {
+      dispatch(obtenerUsuarios()).then(() => setLoading(false))
+    }
+    else {
+      setLoading(false);
+    }
+  }, [dispatch, usuarios.length]);
 
   if (loading) {
     return (
@@ -44,8 +65,12 @@ const Home = () => {
   return (
     <div>
       <div className="card">
-        <div className="card-header">
+        <div className="card-header d-flex justify-content-between align-items-center">
           <a className="btn btn-primary" href="/usuarios/registrar" role="button">Agregar registro</a>
+          <form className="d-flex" onSubmit={handleSubmit} >
+            <input className="form-control me-2" type="search" placeholder="Nombre de usuario" name='buscarUsuario' onChange={e => setBuscarUsuario(e.target.value)} />
+            <button className="btn btn-outline-success" type="submit">Buscar</button>
+          </form>
         </div>
         <div className="card-body">
           <div className="table-responsive-sm" >
@@ -61,7 +86,7 @@ const Home = () => {
               </thead>
               <tbody>
                 {
-                  usuarios.sort((a, b) => a.id - b.id).map(usuario => (
+                  paginadoUsuarios.map(usuario => (
                     <tr key={usuario.id}>
                       <td scope="row">{usuario.id}</td>
                       <td>{usuario.nombreUsuario}</td>
@@ -82,9 +107,21 @@ const Home = () => {
                 }
               </tbody>
             </table>
+            {
+              usuarios.length > 0 &&
+              <div className="d-flex justify-content-between align-items-center">
+                <p>Mostrando {indicePrimerUsuario + 1} a {indiceFinalReal} de {usuarios.length} registros</p>
+                <Pagination
+                  contenidoEstado={usuarios.length}
+                  mostrarCantidadPorPagina={usuariosPorPagina}
+                  paginaActual={paginaActual}
+                  cambiarPaginaActual={cambiarPaginaActual} />
+              </div>
+            }
           </div>
         </div>
       </div>
+      <br />
     </div>
   )
 }

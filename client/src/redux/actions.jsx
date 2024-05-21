@@ -9,6 +9,7 @@ export const VACIAR_ESTADO = "VACIAR_ESTADO";
 export const ELIMINAR_EMPLEADO = "ELIMINAR_EMPLEADO";
 export const OBTENER_USUARIOS = "OBTENER_USUARIOS";
 export const OBTENER_USUARIO = "OBTENER_USUARIO";
+export const OBTENER_USUARIOS_QUERY = "OBTENER_USUARIOS_QUERY";
 export const ELIMINAR_USUARIO = "ELIMINAR_USUARIO";
 export const OBTENER_PUESTOS = "OBTENER_PUESTOS";
 export const OBTENER_PUESTO = "OBTENER_PUESTO";
@@ -114,6 +115,17 @@ export const obtenerUsuario = (id) => {
       }))
   }
 };
+
+export const obtenerUsuariosQuery = (body) => {
+  return (dispatch) => {
+    return axios.get(`${backend}/users?nombreUsuario=${body}`)
+      .then(res => dispatch({ type: OBTENER_USUARIOS_QUERY, payload: res.data }))
+      .catch(err => Swal.fire({
+        icon: "error",
+        title: err.response.data,
+      }))
+  }
+}
 
 export const crearUsuario = (body) => {
   return () => {

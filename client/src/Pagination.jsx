@@ -1,6 +1,6 @@
-const Pagination = ({ empleados, empleadosPorPagina, paginaActual, cambiarPaginaActual }) => {
+const Pagination = ({ contenidoEstado, mostrarCantidadPorPagina, paginaActual, cambiarPaginaActual }) => {
   const numerosPaginas = [];
-  for (let i = 1; i <= Math.ceil(empleados / empleadosPorPagina); i++) {
+  for (let i = 1; i <= Math.ceil(contenidoEstado / mostrarCantidadPorPagina); i++) {
     numerosPaginas.push(i);
   }
   return (

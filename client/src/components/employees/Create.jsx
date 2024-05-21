@@ -133,6 +133,7 @@ const Create = () => {
         <div className="card-footer text-muted">
         </div>
       </div>
+      <br />
     </div>
   )
 }

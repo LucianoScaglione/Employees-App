@@ -1,10 +1,11 @@
-import { OBTENER_EMPLEADOS, OBTENER_EMPLEADO, VACIAR_ESTADO, ELIMINAR_EMPLEADO, OBTENER_USUARIOS, OBTENER_USUARIO, ELIMINAR_USUARIO, OBTENER_PUESTOS, ELIMINAR_PUESTO, OBTENER_PUESTO, OBTENER_EMPLEADOS_QUERY } from './actions';
+import { OBTENER_EMPLEADOS, OBTENER_EMPLEADO, VACIAR_ESTADO, ELIMINAR_EMPLEADO, OBTENER_USUARIOS, OBTENER_USUARIO, ELIMINAR_USUARIO, OBTENER_PUESTOS, ELIMINAR_PUESTO, OBTENER_PUESTO, OBTENER_EMPLEADOS_QUERY, OBTENER_USUARIOS_QUERY } from './actions';
 
 const initialState = {
   empleados: [],
   empleadosCopia: [],
   empleado: [],
   usuarios: [],
+  usuariosCopia: [],
   usuario: [],
   puestos: [],
   puesto: []
@@ -51,7 +52,8 @@ const reducer = (state = initialState, { type, payload }) => {
     case OBTENER_USUARIOS: {
       return {
         ...state,
-        usuarios: payload
+        usuarios: payload,
+        usuariosCopia: payload
       }
     };
     case OBTENER_USUARIO: {
@@ -60,6 +62,14 @@ const reducer = (state = initialState, { type, payload }) => {
         usuario: payload
       }
     };
+    case OBTENER_USUARIOS_QUERY: {
+      const resultado = payload.map(r => r.nombreUsuario)
+      const filtrarUsuarios = state.usuariosCopia.filter(usuario => resultado.includes(usuario.nombreUsuario));
+      return {
+        ...state,
+        usuarios: filtrarUsuarios
+      }
+    }
     case ELIMINAR_USUARIO: {
       const usuarioEliminado = state.usuarios.filter(user => user.id !== payload);
       return {

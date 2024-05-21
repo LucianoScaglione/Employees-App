@@ -1,12 +1,22 @@
 const { Users } = require('../db');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const { Op } = require('sequelize');
 
 
 const obtenerUsuarios = async (req, res, next) => {
   try {
+    const { nombreUsuario } = req.query;
+    if (nombreUsuario) {
+      const buscarUsuariosQuery = await Users.findAll({
+        where: {
+          nombreUsuario: { [Op.iLike]: `%${nombreUsuario}%` },
+        }
+      });
+      buscarUsuariosQuery.length ? res.status(200).json(buscarUsuariosQuery) : res.status(404).send("No existe ningún usuario registrado con ese nombre");
+    }
     const buscarUsuarios = await Users.findAll();
-    buscarUsuarios.length ? res.status(200).send(buscarUsuarios) : res.status(400).send("No existen usuarios registrados")
+    buscarUsuarios.length ? res.status(200).json(buscarUsuarios) : res.status(400).send("No existen usuarios registrados")
   } catch (error) {
     next(error);
   }

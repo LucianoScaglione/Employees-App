@@ -24,11 +24,13 @@ const Home = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(obtenerEmpleadosQuery(empleado));
+    setPaginaActual(1)
   };
 
   const handleChange = (e) => {
-    setEmpleado(e.target.value);
     dispatch(obtenerEmpleadosQuery(e.target.value));
+    setEmpleado(e.target.value);
+    setPaginaActual(1);
   };
 
   const handleDelete = (id) => {
@@ -50,9 +52,16 @@ const Home = () => {
         };
       });
   };
+
   useEffect(() => {
-    !empleados.length && dispatch(obtenerEmpleados()).then(setLoading(false));
-  }, [dispatch]);
+    if (!empleados.length) {
+      dispatch(obtenerEmpleados()).then(() => setLoading(false))
+    }
+    else {
+      setLoading(false);
+    }
+  }, [dispatch, empleados.length]);
+
   if (loading) {
     return (
       <div className="d-flex justify-content-center">
@@ -118,8 +127,8 @@ const Home = () => {
               <div className="d-flex justify-content-between align-items-center">
                 <p>Mostrando {indicePrimerEmpleado + 1} a {indiceFinalReal} de {empleados.length} registros</p>
                 <Pagination
-                  empleados={empleados.length}
-                  empleadosPorPagina={empleadosPorPagina}
+                  contenidoEstado={empleados.length}
+                  mostrarCantidadPorPagina={empleadosPorPagina}
                   paginaActual={paginaActual}
                   cambiarPaginaActual={cambiarPaginaActual} />
               </div>

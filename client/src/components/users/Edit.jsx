@@ -57,28 +57,31 @@ const Edit = () => {
     )
   }
   return (
-    <div className="card">
-      <div className="card-header">Datos del usuario</div>
-      <div className="card-body">
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label className="form-label">Nombre de usuario</label>
-            <input type="text" className="form-control" name="nombreUsuario" value={state.nombreUsuario} placeholder="Nombre de usuario" onChange={handleChange} />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Contraseña</label>
-            <input type="password" className="form-control" name="contraseña" placeholder="Editar contraseña" onChange={handleChange} />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Correo electrónico</label>
-            <input type="text" className="form-control" name="correo" value={state.correo} placeholder="Correo electrónico" onChange={handleChange} />
-          </div>
-          <button type="submit" className="btn btn-success">Actualizar registro</button>
-          <a className="btn btn-primary" href="/usuarios" role="button">Cancelar</a>
-        </form>
-      </div>
-      <div className="card-footer text-muted">
-      </div>
+    <div>
+      <div className="card">
+        <div className="card-header">Datos del usuario</div>
+        <div className="card-body">
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label className="form-label">Nombre de usuario</label>
+              <input type="text" className="form-control" name="nombreUsuario" value={state.nombreUsuario} placeholder="Nombre de usuario" onChange={handleChange} />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Contraseña</label>
+              <input type="password" className="form-control" name="contraseña" placeholder="Editar contraseña" onChange={handleChange} />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Correo electrónico</label>
+              <input type="text" className="form-control" name="correo" value={state.correo} placeholder="Correo electrónico" onChange={handleChange} />
+            </div>
+            <button type="submit" className="btn btn-success">Actualizar registro</button>
+            <a className="btn btn-primary" href="/usuarios" role="button">Cancelar</a>
+          </form>
+        </div>
+        <div className="card-footer text-muted">
+        </div>
+      </div >
+      <br />
     </div >
   )
 }
