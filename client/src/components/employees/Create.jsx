@@ -26,33 +26,22 @@ const Create = () => {
     })
   };
 
-  const convertirBase64 = (imagen, cv) => {
-    if (imagen) {
-      Array.from(imagen).forEach(archivo => {
-        const reader = new FileReader();
-        reader.readAsDataURL(archivo);
-        reader.onload = () => {
-          const base64 = reader.result.split(',')[1];
+  const convertirBase64 = (archivo, tipo) => {
+    Array.from(archivo).forEach(archivo => {
+      const reader = new FileReader();
+      reader.readAsDataURL(archivo);
+      reader.onload = () => {
+        const base64 = reader.result.split(',')[1];
+        if (tipo === 'foto') {
           setFoto(base64);
-        };
-        reader.onerror = (error) => {
-          console.log('Error al leer el archivo:', error);
-        };
-      });
-    };
-    if (cv) {
-      Array.from(cv).forEach(archivo => {
-        const reader = new FileReader();
-        reader.readAsDataURL(archivo);
-        reader.onload = () => {
-          const base64 = reader.result.split(',')[1];
+        } else if (tipo === 'cv') {
           setCurriculumVitae(base64);
-        };
-        reader.onerror = (error) => {
-          console.log('Error al leer el archivo:', error);
-        };
-      });
-    };
+        }
+      };
+      reader.onerror = (error) => {
+        console.log('Error al leer el archivo:', error);
+      };
+    });
   };
 
   const handleSubmit = (e) => {
@@ -105,11 +94,11 @@ const Create = () => {
             </div>
             <div className="mb-3">
               <label className="form-label">Foto:</label>
-              <input type="file" className="form-control" accept="image/png, image/jpeg" name="foto" defaultValue={foto} onChange={e => convertirBase64(e.target.files)} />
+              <input type="file" className="form-control" accept="image/png, image/jpeg" name="foto" defaultValue={foto} onChange={e => convertirBase64(e.target.files, 'foto')} />
             </div>
             <div className="mb-3">
               <label className="form-label">CV(PDF):</label>
-              <input type="file" accept="application/pdf" className="form-control" name="curriculumVitae" defaultValue={curriculumVitae} onChange={e => convertirBase64(foto, e.target.files)} />
+              <input type="file" accept="application/pdf" className="form-control" name="curriculumVitae" defaultValue={curriculumVitae} onChange={e => convertirBase64(e.target.files, 'cv')} />
             </div>
             <div className="mb-3">
               <label className="form-label">Puesto:</label>
