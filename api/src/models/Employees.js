@@ -20,14 +20,10 @@ module.exports = (sequelize) => {
       allowNull: false
     },
     foto: {
-      type: DataTypes.TEXT
+      type: DataTypes.TEXT,
     },
     curriculumVitae: {
       type: DataTypes.TEXT
-    },
-    puesto: {
-      type: DataTypes.STRING,
-      allowNull: false
     },
     fechaIngreso: {
       type: DataTypes.STRING,

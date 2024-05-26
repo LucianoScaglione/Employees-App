@@ -33,26 +33,26 @@ const Create = () => {
       <div className="card">
         <div className="card-header">Datos del usuario</div>
         <div className="card-body">
-          <form onChange={handleChange}>
+          <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label className="form-label">Nombre del usuario:</label>
-              <input type="text" className="form-control" name="nombreUsuario" value={state.nombreUsuario} placeholder="Nombre del usuario" />
+              <input type="text" className="form-control" name="nombreUsuario" value={state.nombreUsuario} placeholder="Nombre del usuario" onChange={handleChange} />
             </div>
             <div className="mb-3">
               <label className="form-label">Contraseña:</label>
-              <input type="password" className="form-control" name="contraseña" value={state.contraseña} placeholder="Escriba su contraseña" />
+              <input type="password" className="form-control" name="contraseña" value={state.contraseña} placeholder="Escriba su contraseña" onChange={handleChange} />
             </div>
             <div className="mb-3">
               <label className="form-label">Correo:</label>
-              <input type="email" className="form-control" name="correo" value={state.correo} placeholder="Escriba su correo electrónico" />
+              <input type="email" className="form-control" name="correo" value={state.correo} placeholder="Escriba su correo electrónico" onChange={handleChange} />
             </div>
-            <button type="submit" className="btn btn-success" onClick={(e) => handleSubmit(e)}>Agregar</button>
+            <button type="submit" className="btn btn-success">Agregar</button>
             <a className="btn btn-primary" href="/usuarios" role="button">Cancelar</a>
           </form>
         </div>
         <div className="card-footer text-muted"></div>
       </div>
-
+      <br />
     </div>
   )
 }

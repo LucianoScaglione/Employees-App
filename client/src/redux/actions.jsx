@@ -4,10 +4,16 @@ import Swal from 'sweetalert2';
 const backend = 'http://localhost:3001';
 export const OBTENER_EMPLEADOS = "OBTENER_EMPLEADOS";
 export const OBTENER_EMPLEADO = "OBTENER_EMPLEADO";
+export const OBTENER_EMPLEADOS_QUERY = "OBTENER_EMPLEADOS_QUERY";
 export const VACIAR_ESTADO = "VACIAR_ESTADO";
 export const ELIMINAR_EMPLEADO = "ELIMINAR_EMPLEADO";
 export const OBTENER_USUARIOS = "OBTENER_USUARIOS";
+export const OBTENER_USUARIO = "OBTENER_USUARIO";
+export const OBTENER_USUARIOS_QUERY = "OBTENER_USUARIOS_QUERY";
 export const ELIMINAR_USUARIO = "ELIMINAR_USUARIO";
+export const OBTENER_PUESTOS = "OBTENER_PUESTOS";
+export const OBTENER_PUESTO = "OBTENER_PUESTO";
+export const ELIMINAR_PUESTO = "ELIMINAR_PUESTO";
 
 export const obtenerEmpleados = () => {
   return (dispatch) => {
@@ -22,6 +28,19 @@ export const obtenerEmpleado = (id) => {
     return axios.get(`${backend}/employees/${id}`)
       .then(res => dispatch({ type: OBTENER_EMPLEADO, payload: res.data }))
       .catch(err => console.log(err))
+  }
+};
+
+export const obtenerEmpleadosQuery = (body) => {
+  return (dispatch) => {
+    return axios.get(`${backend}/employees?empleado=${body}`)
+      .then(res => dispatch({ type: OBTENER_EMPLEADOS_QUERY, payload: res.data }))
+      .catch(err => {
+        Swal.fire({
+          icon: "error",
+          title: err.response.data,
+        });
+      })
   }
 };
 
@@ -86,6 +105,28 @@ export const obtenerUsuarios = () => {
   }
 };
 
+export const obtenerUsuario = (id) => {
+  return (dispatch) => {
+    return axios.get(`${backend}/users/${id}`)
+      .then(res => dispatch({ type: OBTENER_USUARIO, payload: res.data }))
+      .catch(err => Swal.fire({
+        icon: "error",
+        title: err.response.data,
+      }))
+  }
+};
+
+export const obtenerUsuariosQuery = (body) => {
+  return (dispatch) => {
+    return axios.get(`${backend}/users?nombreUsuario=${body}`)
+      .then(res => dispatch({ type: OBTENER_USUARIOS_QUERY, payload: res.data }))
+      .catch(err => Swal.fire({
+        icon: "error",
+        title: err.response.data,
+      }))
+  }
+}
+
 export const crearUsuario = (body) => {
   return () => {
     return axios.post(`${backend}/users/register`, body)
@@ -129,6 +170,23 @@ export const informacionUsuario = () => {
   }
 }
 
+export const editarUsuario = (id, body) => {
+  return () => {
+    return axios.put(`${backend}/users/${id}`, body)
+      .then(res => Swal.fire({
+        title: "¡Buen trabajo!",
+        text: "Usuario actualizado correctamente",
+        icon: "success"
+      }))
+      .catch(err => {
+        Swal.fire({
+          icon: "error",
+          title: err.response.data,
+        });
+      })
+  }
+};
+
 export const eliminarUsuario = (id) => {
   return (dispatch) => {
     return axios.delete(`${backend}/users/${id}`)
@@ -136,3 +194,67 @@ export const eliminarUsuario = (id) => {
       .catch(err => console.log(err))
   }
 };
+
+export const obtenerPuestos = () => {
+  return (dispatch) => {
+    return axios.get(`${backend}/positions`)
+      .then(res => dispatch({ type: OBTENER_PUESTOS, payload: res.data }))
+      .catch(err => console.log(err))
+  }
+};
+
+export const crearPuestos = (body) => {
+  return () => {
+    return axios.post(`${backend}/positions`, body)
+      .then(res => Swal.fire({
+        title: "¡Buen trabajo!",
+        text: "Puesto registrado correctamente",
+        icon: "success"
+      }))
+      .catch(err => Swal.fire({
+        icon: "error",
+        title: err.response.data,
+      }))
+  }
+};
+
+export const obtenerPuesto = (id) => {
+  return (dispatch) => {
+    return axios.get(`${backend}/positions/${id}`)
+      .then(res => dispatch({ type: OBTENER_PUESTO, payload: res.data }))
+      .catch(err => Swal.fire({
+        icon: "error",
+        title: err.response.data,
+      }))
+  }
+}
+
+export const actualizarPuesto = (id, body) => {
+  return () => {
+    return axios.put(`${backend}/positions/${id}`, body)
+      .then(res => Swal.fire({
+        title: "¡Buen trabajo!",
+        text: "Puesto actualizado correctamente",
+        icon: "success"
+      }))
+      .catch(err => Swal.fire({
+        icon: "error",
+        title: err.response.data,
+      }))
+  }
+}
+
+export const eliminarPuesto = (id) => {
+  return (dispatch) => {
+    return axios.delete(`${backend}/positions/${id}`)
+      .then(res => dispatch({ type: ELIMINAR_PUESTO, payload: id }))
+      .then(Swal.fire({
+        title: "Puesto eliminado correctamente",
+        icon: "success"
+      }))
+      .catch(err => Swal.fire({
+        icon: "error",
+        title: err.response.data,
+      }))
+  }
+}

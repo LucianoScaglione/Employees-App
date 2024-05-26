@@ -1,102 +1,108 @@
-const { Employees } = require("../db");
+const { Employees, Positions } = require("../db");
 const { Op } = require("sequelize");
 const fs = require('fs');
 
 const ejecutarBaseDatos = async () => {
-  const obtenerInformacion = await Employees.findAll();
+  const obtenerInformacion = await Employees.findAll({ include: Positions });
   return obtenerInformacion;
 }
 
-const obtenerEmpleados = async (req, res, next) => {
+const manejarErrores = (error, res) => {
+  console.log(error);
+  res.status(500).json({ error: error.message });
+}
+
+const archivoBase64 = (archivo, empleado, extension) => {
+  let decodificarLink = Buffer.from(archivo, 'base64');
+  let nombreArchivoGuardado = extension === '.pdf' ? `${empleado.nombre}${empleado.apellido}.${extension}` : `${Date.now()}.${extension}`
+  let almacenamientoLinkArchivo = `uploads/${nombreArchivoGuardado}`;
+  let linkCArchivoARenderizar = `http://localhost:3001/uploads/${nombreArchivoGuardado}`;
+  fs.writeFileSync(almacenamientoLinkArchivo, decodificarLink);
+  return linkCArchivoARenderizar;
+}
+
+const obtenerEmpleados = async (req, res) => {
   try {
-    const { primerNombre, primerApellido } = req.query;
+    const { empleado } = req.query;
     const obtenerInformacion = await ejecutarBaseDatos();
 
     if (!obtenerInformacion.length) {
       res.status(400).send("La base de datos está vacía");
     }
 
-    if (primerNombre) {
-      const buscarEmpleadoNombre = await Employees.findAll({
+    if (empleado) {
+      const buscarEmpleado = await Employees.findAll({
         where: {
-          primerNombre: {
-            [Op.iLike]: `%${primerNombre}%`
-          }
+          [Op.or]: [
+            { primerNombre: { [Op.iLike]: `%${empleado}%` } },
+            { primerApellido: { [Op.iLike]: `%${empleado}%` } }
+          ]
         }
       });
-      buscarEmpleadoNombre.length ? res.status(200).send(buscarEmpleadoNombre) : res.status(404).send("No existe ningún empleado con ese nombre");
-    } else if (primerApellido) {
-      const buscarEmpleadoApellido = await Employees.findAll({
-        where: {
-          primerApellido: {
-            [Op.iLike]: `%${primerApellido}%`
-          }
-        }
-      });
-      buscarEmpleadoApellido.length ? res.status(200).send(buscarEmpleadoApellido) : res.status(404).send("No existe ningún empleado con ese apellido");
+      buscarEmpleado.length ? res.status(200).json(buscarEmpleado) : res.status(404).send("No existe ningún empleado registrado con ese nombre");
     }
     else {
-      res.status(200).send(obtenerInformacion);
+      res.status(200).json(obtenerInformacion);
     }
   } catch (error) {
-    next(error);
+    manejarErrores(error, res);
   }
 }
 
-const buscarUnEmpleado = async (req, res, next) => {
-  const { id } = req.params;
-  const buscarEmpleado = await Employees.findOne({ where: { id } });
-  if (buscarEmpleado) {
-    res.status(200).send(buscarEmpleado);
-  } else {
-    res.status(400).send("No existe empleado registrado con ese id");
-  }
-}
-
-const registrarEmpleado = async (req, res, next) => {
+const buscarUnEmpleado = async (req, res) => {
   try {
-    const { primerNombre, segundoNombre, primerApellido, segundoApellido, edad, foto, curriculumVitae, puesto, fechaIngreso } = req.body;
+    const { id } = req.params;
+    const buscarEmpleado = await Employees.findOne({ where: { id }, include: Positions });
+    if (buscarEmpleado) {
+      res.status(200).json(buscarEmpleado);
+    } else {
+      res.status(404).send("No existe empleado registrado con ese id");
+    }
+  } catch (error) {
+    manejarErrores(error, res);
+  }
+}
 
-    let decodificarLink = Buffer.from(foto, 'base64');
-    let nombreImagenGuardada = `${Date.now()}.png`;
-    let AlmacenamientoLinkImagen = `uploads/${nombreImagenGuardada}`;
-    let linkImagenARenderizar = `uploads/${nombreImagenGuardada}`;
-    fs.writeFileSync(AlmacenamientoLinkImagen, decodificarLink);
-
+const registrarEmpleado = async (req, res) => {
+  try {
+    const { primerNombre, segundoNombre, primerApellido, segundoApellido, edad, foto, curriculumVitae, puestoId, fechaIngreso } = req.body;
+    if (!primerNombre || !primerApellido || !edad || !puestoId || !fechaIngreso) {
+      res.status(400).send("Debes completar los campos requeridos");
+    }
+    const empleado = { "nombre": primerNombre, "apellido": primerApellido }
+    const crearImagen = foto ? archivoBase64(foto, empleado, '.png') : `http://localhost:3001/uploads/withoutimagen.png`;
+    const crearCV = curriculumVitae ? archivoBase64(curriculumVitae, empleado, '.pdf') : '';
     const crearEmpleado = await Employees.create({
       primerNombre,
       segundoNombre,
       primerApellido,
       segundoApellido,
       edad,
-      foto: `http://localhost:3001/${linkImagenARenderizar}`,
-      curriculumVitae,
-      puesto,
-      fechaIngreso
+      foto: crearImagen,
+      curriculumVitae: crearCV,
+      fechaIngreso,
+      PositionId: puestoId
     });
-
     res.status(200).json({ creado: true, crearEmpleado });
   } catch (error) {
-    next(error);
+    manejarErrores(error, res);
   }
 }
 
-const actualizarEmpleado = async (req, res, next) => {
+const actualizarEmpleado = async (req, res) => {
   try {
     const { id } = req.params;
-    const { primerNombre, segundoNombre, primerApellido, segundoApellido, edad, nuevaFoto, curriculumVitae, puesto, fechaIngreso } = req.body;
-
-    const cambiarImagen = (nuevaFoto) => {
-      let decodificarLink = Buffer.from(nuevaFoto, 'base64');
-      let nombreImagenGuardada = `${Date.now()}.png`;
-      let AlmacenamientoLinkImagen = `uploads/${nombreImagenGuardada}`;
-      let linkImagenARenderizar = `uploads/${nombreImagenGuardada}`;
-      fs.writeFileSync(AlmacenamientoLinkImagen, decodificarLink);
-      return linkImagenARenderizar;
+    const { primerNombre, segundoNombre, primerApellido, segundoApellido, edad, nuevaFoto, nuevoCurriculum, puestoId, fechaIngreso } = req.body;
+    const buscarEmpleado = await Employees.findOne({ where: { id }, include: Positions });
+    if (nuevaFoto) {
+      const url = new URL(buscarEmpleado.foto);
+      const relativePath = url.pathname.substring(1);
+      fs.unlinkSync(relativePath)
     }
+    const empleado = { "nombre": buscarEmpleado.primerNombre, "apellido": buscarEmpleado.primerApellido }
 
-    const buscarEmpleado = await Employees.findOne({ where: { id } });
-    const agregarImagen = nuevaFoto ? cambiarImagen(nuevaFoto) : buscarEmpleado.foto
+    const editarImagen = nuevaFoto ? archivoBase64(nuevaFoto, ".png") : buscarEmpleado.foto
+    const editarCurriculum = nuevoCurriculum ? archivoBase64(nuevoCurriculum, empleado, ".pdf") : buscarEmpleado.curriculumVitae
     if (buscarEmpleado) {
       await buscarEmpleado.update({
         primerNombre: primerNombre,
@@ -104,9 +110,9 @@ const actualizarEmpleado = async (req, res, next) => {
         primerApellido: primerApellido,
         segundoApellido: segundoApellido,
         edad: edad,
-        foto: nuevaFoto ? `http://localhost:3001/${agregarImagen}` : buscarEmpleado.foto,
-        curriculumVitae: curriculumVitae,
-        puesto: puesto,
+        foto: nuevaFoto ? editarImagen : buscarEmpleado.foto,
+        curriculumVitae: nuevoCurriculum ? editarCurriculum : buscarEmpleado.curriculumVitae,
+        PositionId: puestoId,
         fechaIngreso: fechaIngreso
       });
       buscarEmpleado.save();
@@ -115,22 +121,22 @@ const actualizarEmpleado = async (req, res, next) => {
       res.status(404).send("No existe empleado registrado con ese id");
     }
   } catch (error) {
-    next(error);
+    manejarErrores(error, res);
   }
 }
 
-const eliminarEmpleado = async (req, res, next) => {
+const eliminarEmpleado = async (req, res) => {
   try {
     const { id } = req.params;
     const buscarEmpleado = await Employees.findOne({ where: { id } });
     if (!buscarEmpleado) {
       res.status(404).send("No existe ningún empleado registrado con ese id");
     } else {
-      const eliminar = await Employees.destroy({ where: { id } });
+      await Employees.destroy({ where: { id } });
       res.status(200).json({ destroy: true, msg: "El empleado fue eliminado de la base de datos" })
     }
   } catch (error) {
-    next(error);
+    manejarErrores(error, res);
   }
 }
 

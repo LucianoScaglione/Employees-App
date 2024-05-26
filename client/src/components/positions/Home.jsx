@@ -1,9 +1,43 @@
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { eliminarPuesto, obtenerPuestos } from '../../redux/actions';
+import { Link } from 'react-router-dom';
+
 const Home = () => {
-  const puestos = [
-    { "id": 1, "puesto": "Programador Trainee" }, { "id": 2, "puesto": "Programador Junior" },
-    { "id": 3, "puesto": "Programador Semi Senior" }, { "id": 4, "puesto": "Programador Senior" },
-    { "id": 5, "puesto": "Tester Qa" }, { "id": 6, "puesto": "Líder de proyectos" }
-  ];
+  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const puestos = useSelector(state => state.puestos)
+
+  const handleDelete = (id) => {
+    swal({
+      title: "¿Seguro que quieres eliminar el puesto?",
+      text: "Se eliminará de la base de datos",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          dispatch(eliminarPuesto(id));
+        } else {
+          swal("Cancelaste la eliminación");
+        };
+      });
+  }
+
+  useEffect(() => {
+    dispatch(obtenerPuestos()).then(setLoading(false));
+  }, [dispatch]);
+
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center">
+        <div className="spinner-grow text-primary m-5" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    )
+  }
   return (
     <div>
       <div className="card">
@@ -23,14 +57,16 @@ const Home = () => {
               </thead>
               <tbody>
                 {
-                  puestos.map(p => (
-                    <tr className="">
-                      <td scope="row">{p.id}</td>
-                      <td>{p.puesto}</td>
+                  puestos.sort((a, b) => a.id - b.id).map(puesto => (
+                    <tr key={puesto.id}>
+                      <td scope="row">{puesto.id}</td>
+                      <td>{puesto.puesto}</td>
                       <td>
-                        <input className="btn btn-info" type="button" value="Editar" />
+                        <Link to={`/puesto/editar/${puesto.id}`}>
+                          <input className="btn btn-info" type="button" value="Editar" />
+                        </Link>
                         |
-                        <input className="btn btn-danger" type="button" value="Eliminar" />
+                        <input className="btn btn-danger" type="button" value="Eliminar" onClick={() => handleDelete(puesto.id)} />
                       </td>
                     </tr>
                   ))
@@ -40,7 +76,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-
+      <br />
     </div>
   )
 }
