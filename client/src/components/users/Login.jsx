@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { loguearUsuario } from "../../redux/actions";
+import { Navigate } from "react-router";
+import { isAuthenticated } from "../../PrivatesRoutes";
 
 const Login = () => {
   const [state, setState] = useState({
@@ -17,14 +19,20 @@ const Login = () => {
     })
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(loguearUsuario(state));
+    await dispatch(loguearUsuario(state));
     setState({
       nombreUsuario: "",
       contraseña: ""
     });
   };
+
+  const user = isAuthenticated();
+
+  if (user && user.usuario) {
+    return <Navigate to='/' replace />;
+  }
 
   return (
     <main className="container">

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { editarUsuario, obtenerUsuario } from '../../redux/actions';
 
 const Edit = () => {
@@ -13,7 +13,7 @@ const Edit = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const usuario = useSelector(state => state.usuario);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setState({
@@ -25,7 +25,7 @@ const Edit = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(editarUsuario(id, state));
-    history.push('/usuarios');
+    navigate('/usuarios');
     setState({
       nombreUsuario: '',
       contraseña: '',

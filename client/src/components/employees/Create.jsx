@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { crearEmpleado, obtenerPuestos } from "../../redux/actions";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Create = () => {
   const [state, setState] = useState({
@@ -17,7 +17,7 @@ const Create = () => {
   const [curriculumVitae, setCurriculumVitae] = useState('');
   const puestos = useSelector(state => state.puestos);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setState({
@@ -59,7 +59,7 @@ const Create = () => {
     });
     setFoto('');
     setCurriculumVitae('');
-    history.push("/empleados");
+    navigate("/empleados");
   };
 
   useEffect(() => {

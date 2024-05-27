@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { obtenerPuesto, actualizarPuesto, vaciarEstado } from '../../redux/actions';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const Edit = () => {
   const [input, setInput] = useState({ puesto: '' });
   const [loading, setLoading] = useState(true);
   const puesto = useSelector(state => state.puesto);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { id } = useParams();
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(actualizarPuesto(id, input));
-    history.push('/puestos');
+    navigate('/puestos');
     setTimeout(() => {
       window.location.reload();
     }, 3000);

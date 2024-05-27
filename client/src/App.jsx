@@ -1,9 +1,9 @@
 import './styles/App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Route, Switch } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Login from './components/users/Login';
-import NavBar from './components/NavBar';
-import PrivateRoute from './PrivateRoute';
+import PrivatesRoutes from './PrivatesRoutes';
+import Layout from './Layout';
 import Home from './components/Home';
 import HomeEmployees from './components/employees/Home';
 import CreateEmployee from './components/employees/Create';
@@ -16,33 +16,25 @@ import CreateUser from './components/users/Create';
 import EditUser from './components/users/Edit';
 
 function App() {
-  const Layout = ({ children }) => (
-    <>
-      <NavBar />
-      <div>{children}</div>
-    </>
-  );
   return (
     <>
-      <Switch>
-        <Route exact path="/loguearse" component={Login} />
-        <Route>
-          <Layout>
-            <Switch>
-              <PrivateRoute exact path="/" component={Home} />
-              <PrivateRoute exact path="/empleados" component={HomeEmployees} />
-              <PrivateRoute exact path="/empleado/:id" component={EditEmployee} />
-              <PrivateRoute exact path="/empleados/registrar" component={CreateEmployee} />
-              <PrivateRoute exact path="/puestos" component={HomePositions} />
-              <PrivateRoute exact path="/puestos/crear" component={CreatePosition} />
-              <PrivateRoute exact path="/puesto/editar/:id" component={EditPosition} />
-              <PrivateRoute exact path="/usuarios" component={HomeUsers} />
-              <PrivateRoute exact path="/usuarios/registrar" component={CreateUser} />
-              <PrivateRoute exact path="/usuario/editar/:id" component={EditUser} />
-            </Switch>
-          </Layout>
+      <Routes>
+        <Route path="/loguearse" element={<Login />} />
+        <Route element={<PrivatesRoutes />}>
+          <Route element={<Layout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/empleados" element={<HomeEmployees />} />
+            <Route path="/empleado/:id" element={<EditEmployee />} />
+            <Route path="/empleados/registrar" element={<CreateEmployee />} />
+            <Route path="/puestos" element={<HomePositions />} />
+            <Route path="/puestos/crear" element={<CreatePosition />} />
+            <Route path="/puesto/editar/:id" element={<EditPosition />} />
+            <Route path="/usuarios" element={<HomeUsers />} />
+            <Route path="/usuarios/registrar" element={<CreateUser />} />
+            <Route path="/usuario/editar/:id" element={<EditUser />} />
+          </Route>
         </Route>
-      </Switch>
+      </Routes>
     </>
   )
 }

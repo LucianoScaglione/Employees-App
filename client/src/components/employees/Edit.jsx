@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { obtenerEmpleado, editarEmpleado, vaciarEstado, obtenerPuestos } from "../../redux/actions";
 import { useParams } from "react-router-dom";
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Edit = () => {
   const [state, setState] = useState({
@@ -24,7 +24,7 @@ const Edit = () => {
   const dispatch = useDispatch();
   const empleado = useSelector(state => state.empleado);
   const puestos = useSelector(state => state.puestos);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setState({
@@ -65,7 +65,7 @@ const Edit = () => {
     e.preventDefault();
     const empleadoEditado = { ...state, nuevaFoto, nuevoCurriculum }
     dispatch(editarEmpleado(idEmpleado, empleadoEditado));
-    history.push('/empleados');
+    navigate('/empleados');
     setTimeout(() => {
       window.location.reload()
     }, 3000);

@@ -15,7 +15,7 @@ const NavBar = () => {
           <a className="nav-link" href="/usuarios">Usuarios</a>
         </li>
         <li className="nav-item">
-          <a className="nav-link" role="button" onClick={() => { localStorage.removeItem("usuarioToken"), window.location.reload(); }}>Cerrar sesión</a>
+          <a className="nav-link" role="button" onClick={() => { localStorage.removeItem("usuarioToken"); window.location.reload(); }}>Cerrar sesión</a>
         </li>
       </ul>
     </nav>
