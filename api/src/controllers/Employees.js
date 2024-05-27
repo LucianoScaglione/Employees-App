@@ -8,7 +8,7 @@ const ejecutarBaseDatos = async () => {
 }
 
 const manejarErrores = (error, res) => {
-  console.log(error);
+  console.error(error);
   res.status(500).json({ error: error.message });
 }
 
@@ -118,7 +118,7 @@ const actualizarEmpleado = async (req, res) => {
       fechaIngreso: fechaIngreso
     });
     buscarEmpleado.save();
-    res.status(200).json({ msg: "La información del empleado fue actualizada", buscarEmpleado });
+    res.status(200).json(buscarEmpleado);
   } catch (error) {
     manejarErrores(error, res);
   }

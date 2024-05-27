@@ -48,7 +48,7 @@ const actualizarPuesto = async (req, res, next) => {
     } else {
       await editarPuesto.update({ puesto });
       editarPuesto.save();
-      res.status(200).send({ msg: "Puesto actualizado correctamente" });
+      res.status(200).json(editarPuesto);
     }
   } catch (error) {
     next(error);

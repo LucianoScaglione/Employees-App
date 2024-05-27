@@ -10,10 +10,15 @@ export const ELIMINAR_EMPLEADO = "ELIMINAR_EMPLEADO";
 export const OBTENER_USUARIOS = "OBTENER_USUARIOS";
 export const OBTENER_USUARIO = "OBTENER_USUARIO";
 export const OBTENER_USUARIOS_QUERY = "OBTENER_USUARIOS_QUERY";
+export const EDITAR_USUARIO = "EDITAR_USUARIO";
 export const ELIMINAR_USUARIO = "ELIMINAR_USUARIO";
 export const OBTENER_PUESTOS = "OBTENER_PUESTOS";
 export const OBTENER_PUESTO = "OBTENER_PUESTO";
+export const EDITAR_PUESTO = "EDITAR_PUESTO";
 export const ELIMINAR_PUESTO = "ELIMINAR_PUESTO";
+
+
+export const EDITAR_EMPLEADO = "EDITAR_EMPLEADO";
 
 export const obtenerEmpleados = () => {
   return (dispatch) => {
@@ -65,9 +70,10 @@ export const crearEmpleado = (body) => {
 };
 
 export const editarEmpleado = (id, body) => {
-  return () => {
+  return (dispatch) => {
     return axios.put(`${backend}/employees/${id.id}`, body)
       .then(res => {
+        dispatch({ type: EDITAR_EMPLEADO, payload: res.data });
         Swal.fire({
           title: "¡Buen trabajo!",
           text: "Empleado actualizado correctamente",
@@ -171,13 +177,16 @@ export const informacionUsuario = () => {
 }
 
 export const editarUsuario = (id, body) => {
-  return () => {
+  return (dispatch) => {
     return axios.put(`${backend}/users/${id}`, body)
-      .then(res => Swal.fire({
-        title: "¡Buen trabajo!",
-        text: "Usuario actualizado correctamente",
-        icon: "success"
-      }))
+      .then(res => {
+        dispatch({ type: EDITAR_USUARIO, payload: res.data });
+        Swal.fire({
+          title: "¡Buen trabajo!",
+          text: "Usuario actualizado correctamente",
+          icon: "success"
+        })
+      })
       .catch(err => {
         Swal.fire({
           icon: "error",
@@ -227,22 +236,25 @@ export const obtenerPuesto = (id) => {
         title: err.response.data,
       }))
   }
-}
+};
 
 export const actualizarPuesto = (id, body) => {
-  return () => {
+  return (dispatch) => {
     return axios.put(`${backend}/positions/${id}`, body)
-      .then(res => Swal.fire({
-        title: "¡Buen trabajo!",
-        text: "Puesto actualizado correctamente",
-        icon: "success"
-      }))
+      .then(res => {
+        dispatch({ type: EDITAR_PUESTO, payload: res.data });
+        Swal.fire({
+          title: "¡Buen trabajo!",
+          text: "Puesto actualizado correctamente",
+          icon: "success"
+        });
+      })
       .catch(err => Swal.fire({
         icon: "error",
         title: err.response.data,
       }))
   }
-}
+};
 
 export const eliminarPuesto = (id) => {
   return (dispatch) => {
@@ -257,4 +269,4 @@ export const eliminarPuesto = (id) => {
         title: err.response.data,
       }))
   }
-}
+};

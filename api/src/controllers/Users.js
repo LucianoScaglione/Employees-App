@@ -93,7 +93,7 @@ const editarUsuario = async (req, res, next) => {
         correo
       })
       buscarUsuario.save();
-      res.status(200).send("Usuario actualizado correctamente");
+      res.status(200).json(buscarUsuario);
     } else {
       res.status(400).send("No existe usuario registado con ese id");
     }

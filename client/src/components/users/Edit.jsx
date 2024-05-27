@@ -24,16 +24,7 @@ const Edit = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(editarUsuario(id, state));
-    navigate('/usuarios');
-    setState({
-      nombreUsuario: '',
-      contraseña: '',
-      correo: ''
-    });
-    setTimeout(() => {
-      window.location.reload();
-    }, 3000);
+    dispatch(editarUsuario(id, state)).then(() => { navigate('/usuarios'); });
   };
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { OBTENER_EMPLEADOS, OBTENER_EMPLEADO, VACIAR_ESTADO, ELIMINAR_EMPLEADO, OBTENER_USUARIOS, OBTENER_USUARIO, ELIMINAR_USUARIO, OBTENER_PUESTOS, ELIMINAR_PUESTO, OBTENER_PUESTO, OBTENER_EMPLEADOS_QUERY, OBTENER_USUARIOS_QUERY } from './actions';
+import { OBTENER_EMPLEADOS, OBTENER_EMPLEADO, OBTENER_EMPLEADOS_QUERY, EDITAR_EMPLEADO, VACIAR_ESTADO, ELIMINAR_EMPLEADO, OBTENER_USUARIOS, OBTENER_USUARIO, OBTENER_USUARIOS_QUERY, EDITAR_USUARIO, ELIMINAR_USUARIO, OBTENER_PUESTOS, ELIMINAR_PUESTO, OBTENER_PUESTO, EDITAR_PUESTO } from './actions';
 
 const initialState = {
   empleados: [],
@@ -35,6 +35,14 @@ const reducer = (state = initialState, { type, payload }) => {
         empleados: filtrarEmpleados
       }
     };
+    case EDITAR_EMPLEADO: {
+      const actualizarEmpleado = state.empleados.map(empleado => empleado.id === payload.id ? payload : empleado);
+      return {
+        ...state,
+        empleados: actualizarEmpleado,
+        empleadosCopia: actualizarEmpleado
+      }
+    };
     case VACIAR_ESTADO: {
       return {
         ...state,
@@ -69,6 +77,13 @@ const reducer = (state = initialState, { type, payload }) => {
         ...state,
         usuarios: filtrarUsuarios
       }
+    };
+    case EDITAR_USUARIO: {
+      const editarUsuario = state.usuarios.map(usuario => usuario.id === payload.id ? payload : usuario);
+      return {
+        ...state,
+        usuarios: editarUsuario
+      }
     }
     case ELIMINAR_USUARIO: {
       const usuarioEliminado = state.usuarios.filter(user => user.id !== payload);
@@ -87,6 +102,13 @@ const reducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         puesto: payload
+      }
+    };
+    case EDITAR_PUESTO: {
+      const actualizarPuesto = state.puestos.map(puesto => puesto.id === payload.id ? payload : puesto);
+      return {
+        ...state,
+        puestos: actualizarPuesto
       }
     }
     case ELIMINAR_PUESTO: {

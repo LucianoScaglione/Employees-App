@@ -64,11 +64,7 @@ const Edit = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const empleadoEditado = { ...state, nuevaFoto, nuevoCurriculum }
-    dispatch(editarEmpleado(idEmpleado, empleadoEditado));
-    navigate('/empleados');
-    setTimeout(() => {
-      window.location.reload()
-    }, 3000);
+    dispatch(editarEmpleado(idEmpleado, empleadoEditado)).then(() => { navigate('/empleados') });
   }
 
   useEffect(() => {

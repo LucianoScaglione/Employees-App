@@ -12,11 +12,7 @@ const Edit = () => {
   const { id } = useParams();
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(actualizarPuesto(id, input));
-    navigate('/puestos');
-    setTimeout(() => {
-      window.location.reload();
-    }, 3000);
+    dispatch(actualizarPuesto(id, input)).then(() => { navigate('/puestos'); });
   };
 
   useEffect(() => {
