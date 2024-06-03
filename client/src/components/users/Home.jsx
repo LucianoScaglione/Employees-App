@@ -11,7 +11,7 @@ const Home = () => {
   const usuarios = useSelector(state => state.usuarios);
   const usuarioLogueado = informacionUsuario();
   const [paginaActual, setPaginaActual] = useState(1);
-  const usuariosPorPagina = 5;
+  const [usuariosPorPagina, setUsuariosPorPagina] = useState(5);
   const indiceUltimoUsuario = paginaActual * usuariosPorPagina;
   const indicePrimerUsuario = indiceUltimoUsuario - usuariosPorPagina;
   const paginadoUsuarios = usuarios.sort((a, b) => a.id - b.id).slice(indicePrimerUsuario, indiceUltimoUsuario);
@@ -67,12 +67,24 @@ const Home = () => {
       <div className="card">
         <div className="card-header d-flex justify-content-between align-items-center">
           <a className="btn btn-primary" href="/usuarios/registrar" role="button">Agregar registro</a>
-          <form className="d-flex" onSubmit={handleSubmit} >
-            <input className="form-control me-2" type="search" placeholder="Nombre de usuario" name='buscarUsuario' onChange={e => setBuscarUsuario(e.target.value)} />
-            <button className="btn btn-outline-success" type="submit">Buscar</button>
-          </form>
         </div>
         <div className="card-body">
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="d-flex align-items-center">
+              <p className="mb-0">Mostrar</p>
+              <select className="form-select form-select-sm mx-1" onChange={e => setUsuariosPorPagina(e.target.value)}>
+                <option hidden>{usuariosPorPagina}</option>
+                <option value="3">3</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+              </select>
+              <p className="mb-0">registros</p>
+            </div>
+            <form className="d-flex align-items-center" onSubmit={handleSubmit} >
+              <input className="form-control me-2" type="search" placeholder="Nombre de usuario" name='buscarUsuario' onChange={e => setBuscarUsuario(e.target.value)} />
+              <button className="btn btn-outline-success" type="submit">Buscar</button>
+            </form>
+          </div>
           <div className="table-responsive-sm" >
             <table className="table">
               <thead>

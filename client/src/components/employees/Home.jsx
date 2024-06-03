@@ -12,7 +12,7 @@ const Home = () => {
   const [empleado, setEmpleado] = useState('');
 
   const [paginaActual, setPaginaActual] = useState(1);
-  const empleadosPorPagina = 5;
+  const [empleadosPorPagina, setEmpleadosPorPagina] = useState(5);
   const indiceUltimoEmpleado = paginaActual * empleadosPorPagina;
   const indicePrimerEmpleado = indiceUltimoEmpleado - empleadosPorPagina;
   const paginadoEmpleados = empleados.sort((a, b) => a.id - b.id).slice(indicePrimerEmpleado, indiceUltimoEmpleado);
@@ -74,14 +74,26 @@ const Home = () => {
   return (
     <div>
       <div className="card">
-        <div className="card-header d-flex justify-content-between align-items-center">
+        <div className="card-header">
           <a className="btn btn-primary" href="/empleados/registrar" role="button">Agregar registro</a>
-          <form className="d-flex" onSubmit={handleSubmit}>
-            <input className="form-control me-2" type="search" placeholder="Nombre o apellido" onChange={handleChange} />
-            <button className="btn btn-outline-success" type="submit">Buscar</button>
-          </form>
         </div>
         <div className="card-body">
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="d-flex align-items-center">
+              <p className="mb-0">Mostrar</p>
+              <select className="form-select form-select-sm mx-1" onChange={e => setEmpleadosPorPagina(e.target.value)}>
+                <option hidden>{empleadosPorPagina}</option>
+                <option value="3">3</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+              </select>
+              <p className="mb-0">registros</p>
+            </div>
+            <form className="d-flex align-items-center" onSubmit={handleSubmit}>
+              <input className="form-control me-2" type="search" placeholder="Nombre o apellido" onChange={handleChange} />
+              <button className="btn btn-outline-success" type="submit">Buscar</button>
+            </form>
+          </div>
           <div className="table.responsive-sm">
             <table className="table">
               <thead>
@@ -106,7 +118,7 @@ const Home = () => {
                         <td>{empleado.id}</td>
                         <td>{empleado.primerNombre} {empleado.segundoNombre && empleado.segundoNombre} {empleado.primerApellido}</td>
                         <td><img width="70" height="50" src={empleado.foto} className="rounded" alt='' /></td>
-                        <td>{empleado.curriculumVitae ? <strong><a className="text-decoration-none text-red-500" href={empleado.curriculumVitae} target="_blank">{nombreCV}</a></strong> : <p className="fs-1.2">Sin C.V</p>}</td>
+                        <td>{empleado.curriculumVitae ? <strong><a className="text-decoration-none" href={empleado.curriculumVitae} target="_blank">{nombreCV}</a></strong> : <p className="text-secondary">Sin C.V</p>}</td>
                         <td>{empleado.Position.puesto}</td>
                         <td>{empleado.edad}</td>
                         <td>{empleado.fechaIngreso}</td>
