@@ -111,14 +111,12 @@ const Home = () => {
               <tbody>
                 {
                   paginadoEmpleados.map(empleado => {
-                    const separarURL = empleado.curriculumVitae.split("/");
-                    const nombreCV = separarURL[separarURL.length - 1];
                     return (
                       <tr key={empleado.id}>
                         <td>{empleado.id}</td>
                         <td>{empleado.primerNombre} {empleado.segundoNombre && empleado.segundoNombre} {empleado.primerApellido}</td>
                         <td><img width="70" height="50" src={empleado.foto} className="rounded" alt='' /></td>
-                        <td>{empleado.curriculumVitae ? <strong><a className="text-decoration-none" href={empleado.curriculumVitae} target="_blank">{nombreCV}</a></strong> : <p className="text-secondary">Sin C.V</p>}</td>
+                        <td>{empleado.curriculumVitae ? <strong><a className="text-decoration-none" href={empleado.curriculumVitae} target="_blank">{empleado.primerNombre}{empleado.primerApellido}.pdf</a></strong> : <p className="text-secondary">Sin C.V</p>}</td>
                         <td>{empleado.Position.puesto}</td>
                         <td>{empleado.edad}</td>
                         <td>{empleado.fechaIngreso}</td>

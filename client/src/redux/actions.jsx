@@ -14,6 +14,7 @@ export const EDITAR_USUARIO = "EDITAR_USUARIO";
 export const ELIMINAR_USUARIO = "ELIMINAR_USUARIO";
 export const OBTENER_PUESTOS = "OBTENER_PUESTOS";
 export const OBTENER_PUESTO = "OBTENER_PUESTO";
+export const OBTENER_PUESTOS_QUERY = "OBTENER_PUESTOS_QUERY";
 export const EDITAR_PUESTO = "EDITAR_PUESTO";
 export const ELIMINAR_PUESTO = "ELIMINAR_PUESTO";
 
@@ -212,6 +213,30 @@ export const obtenerPuestos = () => {
   }
 };
 
+export const obtenerPuesto = (id) => {
+  return (dispatch) => {
+    return axios.get(`${backend}/positions/${id}`)
+      .then(res => dispatch({ type: OBTENER_PUESTO, payload: res.data }))
+      .catch(err => Swal.fire({
+        icon: "error",
+        title: err.response.data,
+      }))
+  }
+};
+
+export const obtenerPuestosQuery = (body) => {
+  return (dispatch) => {
+    return axios.get(`${backend}/positions?position=${body}`)
+      .then(res => dispatch({ type: OBTENER_PUESTOS_QUERY, payload: res.data }))
+      .catch(err => {
+        Swal.fire({
+          icon: "error",
+          title: err.response.data,
+        });
+      })
+  }
+};
+
 export const crearPuestos = (body) => {
   return () => {
     return axios.post(`${backend}/positions`, body)
@@ -227,16 +252,6 @@ export const crearPuestos = (body) => {
   }
 };
 
-export const obtenerPuesto = (id) => {
-  return (dispatch) => {
-    return axios.get(`${backend}/positions/${id}`)
-      .then(res => dispatch({ type: OBTENER_PUESTO, payload: res.data }))
-      .catch(err => Swal.fire({
-        icon: "error",
-        title: err.response.data,
-      }))
-  }
-};
 
 export const actualizarPuesto = (id, body) => {
   return (dispatch) => {

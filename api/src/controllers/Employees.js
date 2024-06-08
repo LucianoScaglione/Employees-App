@@ -7,11 +7,6 @@ const ejecutarBaseDatos = async () => {
   return obtenerInformacion;
 }
 
-const manejarErrores = (error, res) => {
-  console.error(error);
-  res.status(500).json({ error: error.message });
-}
-
 const archivoBase64 = (archivo, empleado, extension) => {
   let decodificarLink = Buffer.from(archivo, 'base64');
   let nombreArchivoGuardado = extension === '.pdf' ? `${empleado.nombre}${empleado.apellido}${extension}` : `${Date.now()}${extension}`
@@ -21,7 +16,7 @@ const archivoBase64 = (archivo, empleado, extension) => {
   return linkArchivoARenderizar;
 }
 
-const obtenerEmpleados = async (req, res) => {
+const obtenerEmpleados = async (req, res, next) => {
   try {
     const { empleado } = req.query;
     const obtenerInformacion = await ejecutarBaseDatos();
@@ -45,11 +40,11 @@ const obtenerEmpleados = async (req, res) => {
       res.status(200).json(obtenerInformacion);
     }
   } catch (error) {
-    manejarErrores(error, res);
+    next(error);
   }
 }
 
-const buscarUnEmpleado = async (req, res) => {
+const buscarUnEmpleado = async (req, res, next) => {
   try {
     const { id } = req.params;
     const buscarEmpleado = await Employees.findOne({ where: { id }, include: Positions });
@@ -59,11 +54,11 @@ const buscarUnEmpleado = async (req, res) => {
       return res.status(404).send("No existe empleado registrado con ese id");
     }
   } catch (error) {
-    manejarErrores(error, res);
+    next(error);
   }
 }
 
-const registrarEmpleado = async (req, res) => {
+const registrarEmpleado = async (req, res, next) => {
   try {
     const { primerNombre, segundoNombre, primerApellido, segundoApellido, edad, foto, curriculumVitae, puestoId, fechaIngreso } = req.body;
     if (!primerNombre || !primerApellido || !edad || !puestoId || !fechaIngreso) {
@@ -85,11 +80,11 @@ const registrarEmpleado = async (req, res) => {
     });
     res.status(200).json({ creado: true, crearEmpleado });
   } catch (error) {
-    manejarErrores(error, res);
+    next(error);
   }
 }
 
-const actualizarEmpleado = async (req, res) => {
+const actualizarEmpleado = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { primerNombre, segundoNombre, primerApellido, segundoApellido, edad, nuevaFoto, nuevoCurriculum, puestoId, fechaIngreso } = req.body;
@@ -120,11 +115,11 @@ const actualizarEmpleado = async (req, res) => {
     buscarEmpleado.save();
     res.status(200).json(buscarEmpleado);
   } catch (error) {
-    manejarErrores(error, res);
+    next(error);
   }
 }
 
-const eliminarEmpleado = async (req, res) => {
+const eliminarEmpleado = async (req, res, next) => {
   try {
     const { id } = req.params;
     const buscarEmpleado = await Employees.findOne({ where: { id } });
@@ -135,7 +130,7 @@ const eliminarEmpleado = async (req, res) => {
       res.status(200).json({ destroy: true, msg: "El empleado fue eliminado de la base de datos" })
     }
   } catch (error) {
-    manejarErrores(error, res);
+    next(error);
   }
 }
 
