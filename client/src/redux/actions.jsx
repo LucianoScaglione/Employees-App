@@ -17,6 +17,7 @@ export const OBTENER_PUESTO = "OBTENER_PUESTO";
 export const OBTENER_PUESTOS_QUERY = "OBTENER_PUESTOS_QUERY";
 export const EDITAR_PUESTO = "EDITAR_PUESTO";
 export const ELIMINAR_PUESTO = "ELIMINAR_PUESTO";
+export const ORDENAR = "ORDENAR";
 
 
 export const EDITAR_EMPLEADO = "EDITAR_EMPLEADO";
@@ -283,5 +284,12 @@ export const eliminarPuesto = (id) => {
         icon: "error",
         title: err.response.data,
       }))
+  }
+};
+
+export const ordenar = (body) => {
+  return {
+    type: ORDENAR,
+    payload: body
   }
 };

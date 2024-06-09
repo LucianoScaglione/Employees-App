@@ -1,4 +1,4 @@
-import { OBTENER_EMPLEADOS, OBTENER_EMPLEADO, OBTENER_EMPLEADOS_QUERY, EDITAR_EMPLEADO, VACIAR_ESTADO, ELIMINAR_EMPLEADO, OBTENER_USUARIOS, OBTENER_USUARIO, OBTENER_USUARIOS_QUERY, EDITAR_USUARIO, ELIMINAR_USUARIO, OBTENER_PUESTOS, ELIMINAR_PUESTO, OBTENER_PUESTO, EDITAR_PUESTO, OBTENER_PUESTOS_QUERY } from './actions';
+import { OBTENER_EMPLEADOS, OBTENER_EMPLEADO, OBTENER_EMPLEADOS_QUERY, EDITAR_EMPLEADO, VACIAR_ESTADO, ELIMINAR_EMPLEADO, OBTENER_USUARIOS, OBTENER_USUARIO, OBTENER_USUARIOS_QUERY, EDITAR_USUARIO, ELIMINAR_USUARIO, OBTENER_PUESTOS, ELIMINAR_PUESTO, OBTENER_PUESTO, EDITAR_PUESTO, OBTENER_PUESTOS_QUERY, ORDENAR } from './actions';
 
 const initialState = {
   empleados: [],
@@ -126,6 +126,36 @@ const reducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         puestos: eliminarPuesto
+      }
+    };
+    case ORDENAR: {
+      const { value, toChange, property } = payload;
+      const ordenarEstado = () => {
+        if (toChange === 'numeros') {
+          if (value === 'ascendente') {
+            if (property !== 'fechaIngreso') {
+              return state.empleadosCopia.sort((a, b) => a[property] - b[property]);
+            } else {
+              return state.empleadosCopia.sort((a, b) => new Date(a.fechaIngreso) - new Date(b.fechaIngreso));
+            }
+          } else if (value === 'descendente') {
+            if (property !== 'fechaIngreso') {
+              return state.empleadosCopia.sort((a, b) => b[property] - a[property]);
+            } else {
+              return state.empleadosCopia.sort((a, b) => new Date(b.fechaIngreso) - new Date(a.fechaIngreso));
+            }
+          }
+        } else {
+          if (value === 'ascendente') {
+            return state.empleadosCopia.sort((a, b) => a[property].localeCompare(b[property]));
+          } else {
+            return state.empleadosCopia.sort((a, b) => b[property].localeCompare(a[property]));
+          }
+        }
+      }
+      return {
+        ...state,
+        empleados: ordenarEstado()
       }
     };
     default: return state;

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { obtenerEmpleados, eliminarEmpleado, obtenerEmpleadosQuery } from "../../redux/actions";
+import { obtenerEmpleados, eliminarEmpleado, obtenerEmpleadosQuery, ordenar } from "../../redux/actions";
 import { Link } from "react-router-dom";
 import swal from 'sweetalert';
 import Pagination from "../../Pagination";
@@ -10,12 +10,15 @@ const Home = () => {
   const empleados = useSelector(state => state.empleados);
   const [loading, setLoading] = useState(true);
   const [empleado, setEmpleado] = useState('');
-
+  const [filtro, setFiltro] = useState({
+    numeros: 'ascendente',
+    letras: 'ascendente',
+  })
   const [paginaActual, setPaginaActual] = useState(1);
   const [empleadosPorPagina, setEmpleadosPorPagina] = useState(5);
   const indiceUltimoEmpleado = paginaActual * empleadosPorPagina;
   const indicePrimerEmpleado = indiceUltimoEmpleado - empleadosPorPagina;
-  const paginadoEmpleados = empleados.sort((a, b) => a.id - b.id).slice(indicePrimerEmpleado, indiceUltimoEmpleado);
+  const paginadoEmpleados = empleados.slice(indicePrimerEmpleado, indiceUltimoEmpleado).sort((a, b) => a.id - b.id);
   const indiceFinalReal = Math.min(indiceUltimoEmpleado, empleados.length);
   const cambiarPaginaActual = (pagina) => {
     setPaginaActual(pagina);
@@ -25,6 +28,12 @@ const Home = () => {
     e.preventDefault();
     dispatch(obtenerEmpleadosQuery(empleado));
     setPaginaActual(1)
+  };
+
+  const handleSort = (value, toChange, property) => {
+    toChange === 'numeros' ? setFiltro({ ...filtro, numeros: value }) : setFiltro({ ...filtro, letras: value });
+    const data = { value, toChange, property };
+    dispatch(ordenar(data));
   };
 
   const handleChange = (e) => {
@@ -81,7 +90,7 @@ const Home = () => {
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex align-items-center">
               <p className="mb-0">Mostrar</p>
-              <select className="form-select form-select-sm mx-1" onChange={e => setEmpleadosPorPagina(e.target.value)}>
+              <select className="form-select form-select-sm mx-1" onChange={e => { setEmpleadosPorPagina(e.target.value), setPaginaActual(1); }}>
                 <option hidden>{empleadosPorPagina}</option>
                 <option value="3">3</option>
                 <option value="5">5</option>
@@ -98,13 +107,13 @@ const Home = () => {
             <table className="table">
               <thead>
                 <tr>
-                  <th scope="col">Id</th>
-                  <th scope="col">Nombre</th>
+                  <th scope="col">Id {filtro.numeros === 'ascendente' ? <i className="bi bi-sort-numeric-up" onClick={() => { handleSort('descendente', 'numeros', 'id') }}></i> : <i className="bi bi-sort-numeric-down-alt" onClick={() => { handleSort('ascendente', 'numeros', 'id') }}></i>}</th>
+                  <th scope="col">Nombre {filtro.letras === 'ascendente' ? <i className="bi bi-sort-alpha-up ms-1" onClick={() => { handleSort('descendente', 'letras', 'primerNombre') }}></i> : <i className="bi bi-sort-alpha-down-alt ms-1" onClick={() => { handleSort('ascendente', 'letras', 'primerNombre') }}></i>}</th>
                   <th scope="col">Foto</th>
                   <th scope="col">CV</th>
                   <th scope="col">Puesto</th>
-                  <th scope="col">Edad</th>
-                  <th scope="col">Fecha de ingreso</th>
+                  <th scope="col">Edad {filtro.numeros === 'ascendente' ? <i className="bi bi-sort-numeric-up" onClick={() => { handleSort('descendente', 'numeros', 'edad') }}></i> : <i className="bi bi-sort-numeric-down-alt" onClick={() => { handleSort('ascendente', 'numeros', 'edad') }}></i>}</th>
+                  <th scope="col">Fecha de ingreso {filtro.numeros === 'ascendente' ? <i className="bi bi-sort-numeric-up" onClick={() => { handleSort('descendente', 'numeros', 'fechaIngreso') }}></i> : <i className="bi bi-sort-numeric-down-alt" onClick={() => { handleSort('ascendente', 'numeros', 'fechaIngreso') }}></i>}</th>
                   <th scope="col">Acción</th>
                 </tr>
               </thead>

@@ -69,7 +69,7 @@ const Home = () => {
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex align-items-center">
               <p className="mb-0">Mostrar</p>
-              <select className="form-select form-select-sm mx-1" onChange={e => setPuestosPorPagina(e.target.value)}>
+              <select className="form-select form-select-sm mx-1" onChange={e => { setPuestosPorPagina(e.target.value), setPaginaActual(1); }}>
                 <option hidden>{puestosPorPagina}</option>
                 <option value="3">3</option>
                 <option value="5">5</option>
