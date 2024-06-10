@@ -4,6 +4,7 @@ import { obtenerEmpleados, eliminarEmpleado, obtenerEmpleadosQuery, ordenar } fr
 import { Link } from "react-router-dom";
 import swal from 'sweetalert';
 import Pagination from "../../Pagination";
+import withoutimage from '../../../../api/uploads/withoutimage.png'
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -124,7 +125,7 @@ const Home = () => {
                       <tr key={empleado.id}>
                         <td>{empleado.id}</td>
                         <td>{empleado.primerNombre} {empleado.segundoNombre && empleado.segundoNombre} {empleado.primerApellido}</td>
-                        <td><img width="70" height="50" src={empleado.foto} className="rounded" alt='' /></td>
+                        <td><img width="70" height="50" src={empleado.foto ? empleado.foto : withoutimage} className="rounded" alt='' /></td>
                         <td>{empleado.curriculumVitae ? <strong><a className="text-decoration-none" href={empleado.curriculumVitae} target="_blank">{empleado.primerNombre}{empleado.primerApellido}.pdf</a></strong> : <p className="text-secondary">Sin C.V</p>}</td>
                         <td>{empleado.Position.puesto}</td>
                         <td>{empleado.edad}</td>

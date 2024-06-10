@@ -14,7 +14,7 @@ const Home = () => {
   const indiceUltimoPuesto = paginaActual * puestosPorPagina;
   const indicePrimerPuesto = indiceUltimoPuesto - puestosPorPagina;
   const paginadoPuestos = puestos.sort((a, b) => a.id - b.id).slice(indicePrimerPuesto, indiceUltimoPuesto);
-  const indiceFinalReal = Math.min(indiceUltimoPuesto, puestos.length)
+  const indiceFinalReal = Math.min(indiceUltimoPuesto, puestos.length);
   const cambiarPaginaActual = (pagina) => {
     setPaginaActual(pagina);
   };

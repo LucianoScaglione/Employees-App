@@ -64,8 +64,8 @@ const registrarEmpleado = async (req, res, next) => {
     if (!primerNombre || !primerApellido || !edad || !puestoId || !fechaIngreso) {
       return res.status(400).send("Debes completar los campos requeridos");
     }
-    const empleado = { "nombre": primerNombre, "apellido": primerApellido }
-    const crearImagen = foto ? archivoBase64(foto, empleado, '.png') : `http://localhost:3001/uploads/withoutimagen.png`;
+    const empleado = { nombre: primerNombre, apellido: primerApellido }
+    const crearImagen = foto ? archivoBase64(foto, empleado, '.png') : '';
     const crearCV = curriculumVitae ? archivoBase64(curriculumVitae, empleado, '.pdf') : '';
     const crearEmpleado = await Employees.create({
       primerNombre,
@@ -93,13 +93,14 @@ const actualizarEmpleado = async (req, res, next) => {
       return res.status(404).send("No existe empleado registrado con ese id");
     }
     if (nuevaFoto) {
-      const url = new URL(buscarEmpleado.foto);
-      const relativePath = url.pathname.substring(1);
-      fs.unlinkSync(relativePath)
+      if (buscarEmpleado.foto) {
+        const url = new URL(buscarEmpleado.foto);
+        const relativePath = url.pathname.substring(1);
+        fs.unlinkSync(relativePath)
+      }
     }
-    const empleado = { "nombre": buscarEmpleado.primerNombre, "apellido": buscarEmpleado.primerApellido }
-
-    const editarImagen = nuevaFoto ? archivoBase64(nuevaFoto, ".png") : buscarEmpleado.foto
+    const empleado = { nombre: buscarEmpleado.primerNombre, apellido: buscarEmpleado.primerApellido }
+    const editarImagen = nuevaFoto ? archivoBase64(nuevaFoto, empleado, ".png") : buscarEmpleado.foto
     const editarCurriculum = nuevoCurriculum ? archivoBase64(nuevoCurriculum, empleado, ".pdf") : buscarEmpleado.curriculumVitae
     await buscarEmpleado.update({
       primerNombre: primerNombre,
@@ -125,10 +126,29 @@ const eliminarEmpleado = async (req, res, next) => {
     const buscarEmpleado = await Employees.findOne({ where: { id } });
     if (!buscarEmpleado) {
       return res.status(404).send("No existe ningún empleado registrado con ese id");
-    } else {
-      await Employees.destroy({ where: { id } });
-      res.status(200).json({ destroy: true, msg: "El empleado fue eliminado de la base de datos" })
     }
+    if (buscarEmpleado.foto) {
+      const url = buscarEmpleado.foto;
+      const parts = url.split('/');
+      const fileName = parts[parts.length - 1];
+      try {
+        fs.unlinkSync(`uploads/${fileName}`)
+      } catch (error) {
+        return res.status(500).send("Error al eliminar la foto del empleado");
+      }
+    }
+    if (buscarEmpleado.curriculumVitae) {
+      const url = buscarEmpleado.curriculumVitae;
+      const parts = url.split('/');
+      const fileName = parts[parts.length - 1];
+      try {
+        fs.unlinkSync(`uploads/${fileName}`)
+      } catch (error) {
+        return res.status(500).send("Error al eliminar el currículum del empleado");
+      }
+    }
+    await Employees.destroy({ where: { id } });
+    res.status(200).json({ destroy: true, msg: "El empleado fue eliminado de la base de datos" })
   } catch (error) {
     next(error);
   }
