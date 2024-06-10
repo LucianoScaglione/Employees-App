@@ -17,7 +17,7 @@ const reducer = (state = initialState, { type, payload }) => {
     case OBTENER_EMPLEADOS: {
       return {
         ...state,
-        empleados: payload,
+        empleados: payload.sort((a, b) => a.id - b.id),
         empleadosCopia: payload
       }
     };
@@ -129,33 +129,50 @@ const reducer = (state = initialState, { type, payload }) => {
       }
     };
     case ORDENAR: {
-      const { value, toChange, property } = payload;
+      const { value, toChange, property, ordenar } = payload;
       const ordenarEstado = () => {
-        if (toChange === 'numeros') {
-          if (value === 'ascendente') {
-            if (property !== 'fechaIngreso') {
-              return state.empleadosCopia.sort((a, b) => a[property] - b[property]);
-            } else {
-              return state.empleadosCopia.sort((a, b) => new Date(a.fechaIngreso) - new Date(b.fechaIngreso));
+        if (ordenar === 'employees') {
+          if (toChange === 'numeros') {
+            if (value === 'ascendente') {
+              if (property !== 'fechaIngreso') {
+                return state.empleadosCopia.sort((a, b) => a[property] - b[property]);
+              } else {
+                return state.empleadosCopia.sort((a, b) => new Date(a.fechaIngreso) - new Date(b.fechaIngreso));
+              }
+            } else if (value === 'descendente') {
+              if (property !== 'fechaIngreso') {
+                return state.empleadosCopia.sort((a, b) => b[property] - a[property]);
+              } else {
+                return state.empleadosCopia.sort((a, b) => new Date(b.fechaIngreso) - new Date(a.fechaIngreso));
+              }
             }
-          } else if (value === 'descendente') {
-            if (property !== 'fechaIngreso') {
-              return state.empleadosCopia.sort((a, b) => b[property] - a[property]);
+          } else {
+            if (value === 'ascendente') {
+              return state.empleadosCopia.sort((a, b) => a[property].localeCompare(b[property]));
             } else {
-              return state.empleadosCopia.sort((a, b) => new Date(b.fechaIngreso) - new Date(a.fechaIngreso));
+              return state.empleadosCopia.sort((a, b) => b[property].localeCompare(a[property]));
             }
           }
         } else {
-          if (value === 'ascendente') {
-            return state.empleadosCopia.sort((a, b) => a[property].localeCompare(b[property]));
+          if (toChange === 'numeros') {
+            if (value === 'ascendente') {
+              return state.usuariosCopia.sort((a, b) => a[property] - b[property]);
+            } else {
+              return state.usuariosCopia.sort((a, b) => b[property] - a[property]);
+            }
           } else {
-            return state.empleadosCopia.sort((a, b) => b[property].localeCompare(a[property]));
+            if (value === 'ascendente') {
+              return state.usuariosCopia.sort((a, b) => a[property].localeCompare(b[property]));
+            } else {
+              return state.usuariosCopia.sort((a, b) => b[property].localeCompare(a[property]));
+            }
           }
         }
       }
       return {
         ...state,
-        empleados: ordenarEstado()
+        empleados: ordenar === 'employees' ? ordenarEstado() : state.empleados,
+        usuarios: ordenar === 'users' ? ordenarEstado() : state.usuarios
       }
     };
     default: return state;

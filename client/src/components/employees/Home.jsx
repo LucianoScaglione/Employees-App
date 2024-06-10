@@ -13,12 +13,12 @@ const Home = () => {
   const [filtro, setFiltro] = useState({
     numeros: 'ascendente',
     letras: 'ascendente',
-  })
+  });
   const [paginaActual, setPaginaActual] = useState(1);
   const [empleadosPorPagina, setEmpleadosPorPagina] = useState(5);
   const indiceUltimoEmpleado = paginaActual * empleadosPorPagina;
   const indicePrimerEmpleado = indiceUltimoEmpleado - empleadosPorPagina;
-  const paginadoEmpleados = empleados.slice(indicePrimerEmpleado, indiceUltimoEmpleado).sort((a, b) => a.id - b.id);
+  const paginadoEmpleados = empleados.slice(indicePrimerEmpleado, indiceUltimoEmpleado);
   const indiceFinalReal = Math.min(indiceUltimoEmpleado, empleados.length);
   const cambiarPaginaActual = (pagina) => {
     setPaginaActual(pagina);
@@ -32,7 +32,7 @@ const Home = () => {
 
   const handleSort = (value, toChange, property) => {
     toChange === 'numeros' ? setFiltro({ ...filtro, numeros: value }) : setFiltro({ ...filtro, letras: value });
-    const data = { value, toChange, property };
+    const data = { value, toChange, property, ordenar: 'employees' };
     dispatch(ordenar(data));
   };
 

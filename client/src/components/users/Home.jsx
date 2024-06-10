@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { eliminarUsuario, informacionUsuario, obtenerUsuarios, obtenerUsuariosQuery } from "../../redux/actions";
+import { eliminarUsuario, informacionUsuario, obtenerUsuarios, obtenerUsuariosQuery, ordenar } from "../../redux/actions";
 import { Link } from 'react-router-dom';
 import Pagination from "../../Pagination";
 
@@ -10,11 +10,15 @@ const Home = () => {
   const dispatch = useDispatch();
   const usuarios = useSelector(state => state.usuarios);
   const usuarioLogueado = informacionUsuario();
+  const [filtro, setFiltro] = useState({
+    numeros: 'ascendente',
+    letras: 'ascendente',
+  });
   const [paginaActual, setPaginaActual] = useState(1);
   const [usuariosPorPagina, setUsuariosPorPagina] = useState(5);
   const indiceUltimoUsuario = paginaActual * usuariosPorPagina;
   const indicePrimerUsuario = indiceUltimoUsuario - usuariosPorPagina;
-  const paginadoUsuarios = usuarios.sort((a, b) => a.id - b.id).slice(indicePrimerUsuario, indiceUltimoUsuario);
+  const paginadoUsuarios = usuarios.slice(indicePrimerUsuario, indiceUltimoUsuario);
   const indiceFinalReal = Math.min(indiceUltimoUsuario, usuarios.length)
   const cambiarPaginaActual = (pagina) => {
     setPaginaActual(pagina);
@@ -24,6 +28,11 @@ const Home = () => {
     dispatch(obtenerUsuariosQuery(buscarUsuario));
     setPaginaActual(1);
   }
+  const handleSort = (value, toChange, property) => {
+    toChange === 'numeros' ? setFiltro({ ...filtro, numeros: value }) : setFiltro({ ...filtro, letras: value });
+    const data = { value, toChange, property, ordenar: 'users' };
+    dispatch(ordenar(data));
+  };
   const handleDelete = (e, id) => {
     e.preventDefault();
     swal({
@@ -89,8 +98,8 @@ const Home = () => {
             <table className="table">
               <thead>
                 <tr>
-                  <th scope="col">Id</th>
-                  <th scope="col">Nombre del usuario</th>
+                  <th scope="col">Id {filtro.numeros === 'ascendente' ? <i className="bi bi-sort-numeric-up" onClick={() => { handleSort('descendente', 'numeros', 'id') }}></i> : <i className="bi bi-sort-numeric-down-alt" onClick={() => { handleSort('ascendente', 'numeros', 'id') }}></i>}</th>
+                  <th scope="col">Nombre del usuario {filtro.letras === 'ascendente' ? <i className="bi bi-sort-alpha-up ms-1" onClick={() => { handleSort('descendente', 'letras', 'nombreUsuario') }}></i> : <i className="bi bi-sort-alpha-down-alt ms-1" onClick={() => { handleSort('ascendente', 'letras', 'nombreUsuario') }}></i>}</th>
                   <th scope="col">Contraseña</th>
                   <th scope="col">Correo</th>
                   <th scope="col">Acciones</th>
